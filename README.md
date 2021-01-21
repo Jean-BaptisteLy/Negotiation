@@ -1,6 +1,6 @@
 # M2 ANDROIDE : Mini-projet de l'UE "Coordination et Consensus Multi-Agents"
 
-On considère (pour la visualisation, et pour donner un sens concret au coût de visite des diff´erents sites) un monde de cases, avec :
+On considère (pour la visualisation, et pour donner un sens concret au coût de visite des différents sites) un monde de cases, avec :
 
 • un ensemble de robots
 
