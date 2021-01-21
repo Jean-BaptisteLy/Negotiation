@@ -27,6 +27,7 @@ class World:
 			id_agent += 1
 			self.agents[id_agent] = a
 			self.grid[a[0]][a[1]] = ("a",id_agent)
+		return self.agents
 
 	# crée les objets
 	# input : list[(x,y)]
@@ -36,6 +37,7 @@ class World:
 			id_object += 1
 			self.objects[id_object] = o
 			self.grid[o[0]][o[1]] = ("o",id_object)
+		return self.objects
 
 	def display_grid(self): # non fonctionnel
 		print(self.grid)
