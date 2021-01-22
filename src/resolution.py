@@ -145,6 +145,7 @@ def negotiation(agents,objects,d,greaterValue):
 	for z_key,z_value in Z.items():
 
 		# Initialisation :
+		rounds = 0
 
 		# allocations # TODO
 		'''
@@ -208,28 +209,79 @@ def negotiation(agents,objects,d,greaterValue):
 		)
 
 		allocations = {}
-		print("z_value :",z_value)
+		allocations_a1 = {}
+		allocations_a2 = {}
+		#print("z_value :",z_value)
 		for allocation in allocations_post_traitement:
-			print("allocation :",allocation)
-			print("allocation 1:",allocation[0])
-			print("allocation 2:",allocation[1])
+			#print("allocation :",allocation)
+			#print("allocation 1:",allocation[0])
+			#print("allocation 2:",allocation[1])
 			objects_agent_1 = [ objects[i] for i in allocation[0] ]
 			objects_agent_2 = [ objects[i] for i in allocation[1] ]
-			print("objects_agent_1 :",objects_agent_1)
-			print("objects_agent_2 :",objects_agent_2)
-			print(tour(agents[z_key[0]],objects_agent_1))
+			#print("objects_agent_1 :",objects_agent_1)
+			#print("objects_agent_2 :",objects_agent_2)
+			#print(tour(agents[z_key[0]],objects_agent_1))
 			allocations[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
-			#allocations[allocation] = greaterValue - tour(agents[z_key[0]],z_value)
-		print("allocations :",allocations)
+			allocations_a1[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
+			allocations_a2[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
+		print("allocations_a1 :",allocations_a1)
+		print("allocations_a2 :",allocations_a2)
+
+		offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
+		offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+
+		print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
+
+		while(offer_a1 != offer_a2):
+
+			rounds += 1
+
+			offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
+			offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+
+			u1a1 = allocations[offer_a1][0]
+			u1a2 = allocations[offer_a2][0]
+			u2a1 = allocations[offer_a1][1]
+			u2a2 = allocations[offer_a2][1]
+
+			print(rounds,"		",offer_a1," 	",offer_a2,"	",(u1a1,u1a2),"		",(u2a1,u2a2))
+
+			if(u1a1 == conflict_point_value[0]):
+				z1 = 1
+			else:			
+				z1 = (u1a1 - u1a2) / (u1a1 - conflict_point_value[0])
+
+			if(u2a2 == conflict_point_value[1]):
+				z2 = 1
+			else:			
+				z2 = (u2a2 - u2a1) / (u2a2 - conflict_point_value[1])
+			
+			print("z1 :",z1)
+			print("z2 :",z2)
+
+			# concession
+			if(z1 == z2):
+				del allocations_a1[offer_a1]
+				del allocations_a2[offer_a2]
+				print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
+			elif(z1 < z2):
+				del allocations_a1[offer_a1]
+				print("L'agent",z_key[0],"concède.")
+			else: # z1 > z2
+				del allocations_a2[offer_a2]
+				print("L'agent",z_key[1],"concède.")
+
+			print("allocations_a1 :",allocations_a1)
+			print("allocations_a2 :",allocations_a2)
+
+			
+			
 
 
-		z1 = max(allocations.items(), key=lambda v:v[1])[0]
+		#if 
 
-		z1 = max(allocations.items(), key=itemgetter(1))[0]
-
-		print(z1)
-
-		nbre_round = 0
+		
+		
 
 		break
 
