@@ -40,20 +40,14 @@ def tour(depart, objects):
 	return min_path
 
 #def biggestTour(agents,objects):
-def biggestTour(Z):
-	pass
-
-# matrix representation of graph using Manhattan distance for input TSP
-# INPUT : 
-# OUTPUT : 
-def matrix_representation_graph(agents,objects):
-	mrg = []
-	for a_key,a_value in agents.items():
-		mrg_a = []
-		for o_key,o_value in objects.items():
-			mrg_a.append(manhattanDistance(a_value,o_value))
-		mrg.append(mrg_a)
-	return mrg
+def biggestTour(Z,agents):
+	max_path = 0
+	for z_key,z_value in Z.items():
+		for agent in z_key:
+			value_path = tour(agents[agent],z_value)
+			if value_path > max_path:
+				max_path = value_path
+	return max_path
 
 # ce que perçoivent les robots avec la distance d
 # INPUT : list list integer
@@ -94,10 +88,19 @@ def set_Z(agents_visible_objects):
 			Z[(partners[0],partners[1])] = common_elements
 	return Z
 
-def zeuthens():
+def agent_utility(greaterValue,tour_value):
 	pass
 
-def conflict_point():
+# tournée entière
+# tournées des deux agents
+def conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None):
+	conflict_point = []
+	for key in key_Z:
+		conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
+	#return tuple(conflict_point)
+	return conflict_point
+
+def zeuthens():
 	pass
 
 def agreement():
@@ -107,8 +110,31 @@ def nash_product():
 	pass
 
 # Processus de négociation
-def negotiation(agents,objects,d):
-	
-	#biggestTour() # TODO
+# greater value than the cost of the largest possible tour (greaterValue)
+def negotiation(agents,objects,d,greaterValue):
 
-	Z = perception(agents,objects,d)
+	# Initialisation
+	agents_utilities = []
+
+	# objets visibles avec la distance d
+	agents_visible_objects = perception(agents,objects,d)
+	print("agents_visible_objects :",agents_visible_objects)
+
+	# ensemble Z (objets en commun)
+	Z = set_Z(agents_visible_objects)
+	print("Z :",Z)
+
+	# la plus grande tournée
+	biggestTour_value = biggestTour(Z,agents)
+	print("biggestTour :",biggestTour_value)
+
+	# valeur plus grande que le coût de la plus grande tournée possible
+	greaterValue += biggestTour_value
+	print("greaterValue :",greaterValue)
+
+	# point de conflit
+	key_Z = (1,2)
+	conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None)	
+	print("conflict_point :",conflict_point_value)
+
+	pass
