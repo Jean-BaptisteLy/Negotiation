@@ -246,8 +246,10 @@ def negotiation(agents,objects,d,greaterValue):
 			(	(1,)	,	(2, 3)	)	,
 		)
 		'''
-		#tasks = objects.keys()
-		#tasks = [1,2,3]
+		
+		tasks = []
+		for i in z_value:
+			tasks.append(list(objects.keys())[list(objects.values()).index(i)])
 		print("tasks :",tasks)
 
 		partitions = partition(tasks)
@@ -339,15 +341,15 @@ def negotiation(agents,objects,d,greaterValue):
 				if(z1 == z2):
 					del allocations_a1[offer_a1]
 					del allocations_a2[offer_a2]
-					cas = 3
+					cas = 0
 					print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
 				elif(z1 < z2):
 					del allocations_a1[offer_a1]
-					cas = 1
+					cas = 0
 					print("L'agent",z_key[0],"concède.")
 				else: # z1 > z2
 					del allocations_a2[offer_a2]
-					cas = 2
+					cas = 0
 					print("L'agent",z_key[1],"concède.")
 
 			print("allocations_a1 :",allocations_a1)

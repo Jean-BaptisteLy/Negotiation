@@ -4,6 +4,7 @@ import time
 from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import colors
 
 class World:
 
@@ -39,6 +40,22 @@ class World:
 			self.grid[o[0]][o[1]] = ("o",id_object)
 		return self.objects
 
+	def display_grid(self):
+		data = np.zeros((self.n, self.n))
+		for a_key,a_value in self.agents.items():
+			x = self.n - a_value[1]
+			y = a_value[0] - 1
+			data[x][y] = 1
+		for o_key,o_value in self.objects.items():
+			x = self.n - o_value[1]
+			y = o_value[0] - 1
+			data[x][y] = 2
+		cmap = colors.ListedColormap(['white','blue','red'])
+		plt.figure(figsize=(6,6))
+		plt.pcolor(data[::-1],cmap=cmap,edgecolors='k', linewidths=3)
+		plt.show()
+
+	'''
 	def display_grid(self): # non fonctionnel
 		print(self.grid)
 
@@ -60,6 +77,7 @@ class World:
 					print("a"+str(self.grid[i][j][1]))
 				elif self.grid[i][j][0] == "o":
 					print("o"+str(self.grid[i][j][1]))
+		'''
 		
 	def get_agents(self):
 		return self.agents
