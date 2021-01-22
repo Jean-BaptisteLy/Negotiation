@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import itertools as it
 from sys import maxsize
+from itertools import *
 from itertools import permutations
 from itertools import combinations
 from operator import itemgetter
@@ -14,6 +15,40 @@ def manhattanDistance(p1,p2):
 	(x1,y1) = p1
 	(x2,y2) = p2
 	return abs(x1 - x2) + abs(y1 - y2)
+
+def partition(tasks):
+    """
+    Cacule toutes les partitions possibles étant donné un ensemble de tâches.
+    """
+    l1 = []
+    l2 = []
+    for pattern in product([True,False],repeat=len(tasks)):
+        l1.append(tuple([x[1] for x in zip(pattern,tasks) if x[0]]))
+        l2.append(tuple([x[1] for x in zip(pattern,tasks) if not x[0]]))
+
+    return list(zip(l1,l2))
+
+def non_dominated_po(partitions):
+    """
+    Étant donné un dictionnaire de partitions qui nous permet de connaître la valeur
+    de chaque partition, on fait le traitement des partitions de manière à enlever celles
+    qui sont Pareto-dominées.
+    """
+    # List of pareto-optimal points
+    #po = []
+    po = {}
+    for part, ut in partitions.items():
+        dominated = False
+        # We add the task only if it is not dominated
+        for other_part, other_ut in partitions.items():
+            if other_ut[0] > ut[0] and other_ut[1] > ut[1] and other_part != part:
+                dominated = True
+                continue
+        if not dominated:
+            #po.append(part)
+            po[part] = ut
+        
+    return po
 
 # Tournée
 # INPUT : list , list[lists]
@@ -192,6 +227,7 @@ def negotiation(agents,objects,d,greaterValue):
 			(	((3, 6))	,	((6, 8), (5, 6))	)	,
 		)
 		'''
+		'''
 		allocations_pre_traitement = (
 			(	(1, 2, 3)	,	(None)	)	,
 			(	(1, 2)	,	(3,)	)	,
@@ -209,18 +245,34 @@ def negotiation(agents,objects,d,greaterValue):
 			(	(2,)	,	(1, 3)	)	,
 			(	(1,)	,	(2, 3)	)	,
 		)
+		'''
+		#tasks = objects.keys()
+		#tasks = [1,2,3]
+		print("tasks :",tasks)
 
-		allocations = {}
+		partitions = partition(tasks)
+		print("partitions :",partitions)
+		
+		allocations_pre_traitement = {}
 		allocations_a1 = {}
 		allocations_a2 = {}
-		for allocation in allocations_post_traitement:
+		for allocation in partitions:
 			objects_agent_1 = [ objects[i] for i in allocation[0] ]
 			objects_agent_2 = [ objects[i] for i in allocation[1] ]
 			tour1 = tour(agents[z_key[0]],objects_agent_1)
 			tour2 = tour(agents[z_key[1]],objects_agent_2)
-			allocations[allocation] = (greaterValue - tour1 , greaterValue - tour2)
-			allocations_a1[allocation] = (greaterValue - tour1 , greaterValue - tour2)
-			allocations_a2[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+			allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+			#allocations_a1[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+			#allocations_a2[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+
+		print("allocations_pre_traitement :",allocations_pre_traitement)
+
+		allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
+
+		allocations = deepcopy(allocations_post_traitement)
+		allocations_a1 = deepcopy(allocations_post_traitement)
+		allocations_a2 = deepcopy(allocations_post_traitement)
+
 		print("allocations_a1 :",allocations_a1)
 		print("allocations_a2 :",allocations_a2)
 
@@ -262,6 +314,7 @@ def negotiation(agents,objects,d,greaterValue):
 			print("z1 :",z1)
 			print("z2 :",z2)
 
+			'''
 			if cas == 1: # Le premier agent a concédé précédemment
 				if z1 < z2:
 					cas = 0
@@ -274,11 +327,12 @@ def negotiation(agents,objects,d,greaterValue):
 					del allocations_a2[offer_a2]
 			elif cas == 3: # Les deux agents ont concédé précemment
 				if z1 == z2:
-					
+					pass
 				else:
 					cas = 0
 			else:
 				print("Erreur")
+			'''
 
 			# concession
 			if(cas == 0):
