@@ -5,12 +5,8 @@ from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
 import itertools as it
-
-# la plus grande tournée
-# DFS ? NP-hard
-def biggestTour():
-	# TODO
-	pass
+from sys import maxsize
+from itertools import permutations
 
 def smallestTour():
 	# TODO
@@ -21,9 +17,47 @@ def manhattanDistance(p1,p2):
 	(x2,y2) = p2
 	return abs(x1 - x2) + abs(y1 - y2)
 
+# Tournée
+# INPUT : list , list[lists]
+# OUTPUT : integer
+def tour(depart, objects):
+	tours = list(permutations(objects,len(objects)))
+	#print(tours)
+	min_path = maxsize
+	for t in tours:
+		valeur_tournee = 0
+		#print(t)
+		#print("######################")
+		new_depart = depart
+		for i in range(len(t)):
+			#print(i)
+			#if i != len(t): # si pas encore arrivé à la fin
+			valeur_tournee += manhattanDistance(new_depart,t[i])
+			new_depart = t[i]
+			#print(valeur_tournee)
+		if valeur_tournee < min_path:
+			min_path = valeur_tournee
+	return min_path
+
+#def biggestTour(agents,objects):
+def biggestTour(Z):
+	pass
+
+# matrix representation of graph using Manhattan distance for input TSP
+# INPUT : 
+# OUTPUT : 
+def matrix_representation_graph(agents,objects):
+	mrg = []
+	for a_key,a_value in agents.items():
+		mrg_a = []
+		for o_key,o_value in objects.items():
+			mrg_a.append(manhattanDistance(a_value,o_value))
+		mrg.append(mrg_a)
+	return mrg
+
 # ce que perçoivent les robots avec la distance d
 # INPUT : list list integer
-# OUTPUT : dict (agent1,agent2) : [(x,y)]
+# OUTPUT : {a:[(x,y)]}
 def perception(agents,objects,d):
 	#distance de manhattan sur tous les objets
 	#pour chaque distance, si elle est inférieure à d
@@ -38,8 +72,12 @@ def perception(agents,objects,d):
 			if manhattanDistance(a_value,o_value) <= d:
 				visible_objects.append(o_value)
 		agents_visible_objects[a_key] = visible_objects
-	# {a:[(x,y)]} 
+	return agents_visible_objects
 
+
+# INPUT : {a:[(x,y)]} 
+# OUTPUT : dict (agent1,agent2) : [(x,y)]
+def set_Z(agents_visible_objects):
 	# objets en commun
 	Z = {}
 	# toutes les combinaisons possibles, formation des couples d'agents
@@ -54,10 +92,7 @@ def perception(agents,objects,d):
 		common_elements = list(set(fusion_liste[0]).intersection(fusion_liste[1]))
 		if common_elements: # si éléments en commun, couple confirmé
 			Z[(partners[0],partners[1])] = common_elements
-
 	return Z
-
-
 
 def zeuthens():
 	pass
