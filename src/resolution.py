@@ -8,6 +8,7 @@ import itertools as it
 from sys import maxsize
 from itertools import permutations
 from itertools import combinations
+from operator import itemgetter
 
 def smallestTour():
 	# TODO
@@ -221,7 +222,13 @@ def negotiation(agents,objects,d,greaterValue):
 			#allocations[allocation] = greaterValue - tour(agents[z_key[0]],z_value)
 		print("allocations :",allocations)
 
-		#z1 = 
+
+		z1 = max(allocations.items(), key=lambda v:v[1])[0]
+
+		z1 = max(allocations.items(), key=itemgetter(1))[0]
+
+		print("fdp")
+		print(z1)
 
 		nbre_round = 0
 
