@@ -197,7 +197,7 @@ def negotiation(agents,objects,d,greaterValue):
 			(	(1, 2)	,	(3,)	)	,
 			(	(1, 3)	,	(2,)	)	,
 			(	(2, 3)	,	(1,)	)	,
-			(	(None)	,	(1, 2, 3)	)	,
+			(	()	,	(1, 2, 3)	)	,
 			(	(3,)	,	(1, 2)	)	,
 			(	(2,)	,	(1, 3)	)	,
 			(	(1,)	,	(2, 3)	)	,
@@ -216,16 +216,20 @@ def negotiation(agents,objects,d,greaterValue):
 		for allocation in allocations_post_traitement:
 			objects_agent_1 = [ objects[i] for i in allocation[0] ]
 			objects_agent_2 = [ objects[i] for i in allocation[1] ]
-			allocations[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
-			allocations_a1[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
-			allocations_a2[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
+			tour1 = tour(agents[z_key[0]],objects_agent_1)
+			tour2 = tour(agents[z_key[1]],objects_agent_2)
+			allocations[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+			allocations_a1[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+			allocations_a2[allocation] = (greaterValue - tour1 , greaterValue - tour2)
 		print("allocations_a1 :",allocations_a1)
 		print("allocations_a2 :",allocations_a2)
 
 		offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
 		offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
-		print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
+		historic = []
+		historic.append(str("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2"))
+		#print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
 		while(offer_a1 != offer_a2):
 
@@ -239,7 +243,9 @@ def negotiation(agents,objects,d,greaterValue):
 			u2a1 = allocations[offer_a1][1]
 			u2a2 = allocations[offer_a2][1]
 
-			print(rounds,"		",offer_a1," 	",offer_a2,"	",(u1a1,u1a2),"		",(u2a1,u2a2))
+			historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))))
+			#print(rounds,"		",offer_a1," 	",offer_a2,"	",(u1a1,u1a2),"		",(u2a1,u2a2))
+
 
 			if(u1a1 == conflict_point_value[0]):
 				z1 = 1
@@ -279,7 +285,8 @@ def negotiation(agents,objects,d,greaterValue):
 
 		
 		
-
+		for h in historic:
+			print(h)
 		break
 
 	pass
