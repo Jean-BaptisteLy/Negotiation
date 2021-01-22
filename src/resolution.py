@@ -231,6 +231,8 @@ def negotiation(agents,objects,d,greaterValue):
 		historic.append(str("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2"))
 		#print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
+		cas = 0
+
 		while(offer_a1 != offer_a2):
 
 			rounds += 1
@@ -260,17 +262,39 @@ def negotiation(agents,objects,d,greaterValue):
 			print("z1 :",z1)
 			print("z2 :",z2)
 
+			if cas == 1: # Le premier agent a concédé précédemment
+				if z1 < z2:
+					cas = 0
+				else:
+					del allocations_a1[offer_a1]
+			elif cas == 2: # Le second agent a concédé précédemment
+				if z1 > z2:
+					cas = 0
+				else:
+					del allocations_a2[offer_a2]
+			elif cas == 3: # Les deux agents ont concédé précemment
+				if z1 == z2:
+					
+				else:
+					cas = 0
+			else:
+				print("Erreur")
+
 			# concession
-			if(z1 == z2):
-				del allocations_a1[offer_a1]
-				del allocations_a2[offer_a2]
-				print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
-			elif(z1 < z2):
-				del allocations_a1[offer_a1]
-				print("L'agent",z_key[0],"concède.")
-			else: # z1 > z2
-				del allocations_a2[offer_a2]
-				print("L'agent",z_key[1],"concède.")
+			if(cas == 0):
+				if(z1 == z2):
+					del allocations_a1[offer_a1]
+					del allocations_a2[offer_a2]
+					cas = 3
+					print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
+				elif(z1 < z2):
+					del allocations_a1[offer_a1]
+					cas = 1
+					print("L'agent",z_key[0],"concède.")
+				else: # z1 > z2
+					del allocations_a2[offer_a2]
+					cas = 2
+					print("L'agent",z_key[1],"concède.")
 
 			print("allocations_a1 :",allocations_a1)
 			print("allocations_a2 :",allocations_a2)
