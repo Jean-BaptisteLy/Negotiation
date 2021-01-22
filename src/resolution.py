@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import itertools as it
 from sys import maxsize
 from itertools import permutations
+from itertools import combinations
 
 def smallestTour():
 	# TODO
@@ -75,7 +76,7 @@ def set_Z(agents_visible_objects):
 	# objets en commun
 	Z = {}
 	# toutes les combinaisons possibles, formation des couples d'agents
-	couples = list(map(dict, it.combinations(agents_visible_objects.items(), 2)))
+	couples = list(map(dict,combinations(agents_visible_objects.items(), 2)))
 	for couple in couples:
 		fusion_liste = []
 		partners = []
@@ -113,8 +114,10 @@ def nash_product():
 # greater value than the cost of the largest possible tour (greaterValue)
 def negotiation(agents,objects,d,greaterValue):
 
-	# Initialisation
-	agents_utilities = []
+	print("agents :",agents)
+	print("objets :",objects)
+	print("distance d :",d)
+	print("valeur supplémantaire :",greaterValue)
 
 	# objets visibles avec la distance d
 	agents_visible_objects = perception(agents,objects,d)
@@ -136,5 +139,92 @@ def negotiation(agents,objects,d,greaterValue):
 	key_Z = (1,2)
 	conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None)	
 	print("conflict_point :",conflict_point_value)
+
+	# Négociation par Monotonic Concession Protocol
+	for z_key,z_value in Z.items():
+
+		# Initialisation :
+
+		# allocations # TODO
+		'''
+		combinaisons_allocations = list(permutations(z_value, len(z_value))) 
+		print("combinaisons_allocations :",combinaisons_allocations)
+		allocations_pre_traitement = {}
+		allocations_post_traitement = {} # bargaining
+		'''
+
+		'''
+		o1 = (3, 6)
+		o2 = (6, 8)
+		o3 = (5, 6)
+
+		({o1, o2, o3}, O) = (3, 10)
+		({o1, o2}, o3) = (3, 8)
+		({o1, o3}, o2) = (6,7)
+		({o2, o3}, o1) = (4, 6)
+		(O, {o1, o2, o3}) = (10, 2)
+		(o3, {o1, o2}) = (6, 2)
+		(o2, {o1, o3}) = (7,6)
+		(o1, {o2, o3}) = (8,5)
+		'''
+
+		# OUTPUT :  # TODO
+		'''
+		allocations_pre_traitement = (
+			(	((3, 6), (6, 8), (5, 6))	,	((None,None))	)	,
+			(	((3, 6), (6, 8))	,	((5, 6))	)	,
+			(	((3, 6), (5, 6))	,	((6, 8))	)	,
+			(	((6, 8), (5, 6))	,	((3, 6))	)	,
+			(	((None,None))	,	((3, 6), (6, 8), (5, 6))	)	,
+			(	((5, 6))	,	((3, 6), (6, 8))	)	,
+			(	((6, 8))	,	((3, 6), (5, 6))	)	,
+			(	((3, 6))	,	((6, 8), (5, 6))	)	,
+		)
+		allocations_post_traitement = (
+			(	((3, 6), (6, 8), (5, 6))	,	((None,None))	)	,
+			(	((3, 6), (5, 6))	,	((6, 8))	)	,
+			(	((None,None))	,	((3, 6), (6, 8), (5, 6))	)	,
+			(	((6, 8))	,	((3, 6), (5, 6))	)	,
+			(	((3, 6))	,	((6, 8), (5, 6))	)	,
+		)
+		'''
+		allocations_pre_traitement = (
+			(	(1, 2, 3)	,	(None)	)	,
+			(	(1, 2)	,	(3,)	)	,
+			(	(1, 3)	,	(2,)	)	,
+			(	(2, 3)	,	(1,)	)	,
+			(	(None)	,	(1, 2, 3)	)	,
+			(	(3,)	,	(1, 2)	)	,
+			(	(2,)	,	(1, 3)	)	,
+			(	(1,)	,	(2, 3)	)	,
+		)
+		allocations_post_traitement = (
+			(	(1, 2, 3)	,	()	)	,
+			(	(1, 3)	,	(2,)	)	,
+			(	()	,	(1, 2, 3)	)	,
+			(	(2,)	,	(1, 3)	)	,
+			(	(1,)	,	(2, 3)	)	,
+		)
+
+		allocations = {}
+		print("z_value :",z_value)
+		for allocation in allocations_post_traitement:
+			print("allocation :",allocation)
+			print("allocation 1:",allocation[0])
+			print("allocation 2:",allocation[1])
+			objects_agent_1 = [ objects[i] for i in allocation[0] ]
+			objects_agent_2 = [ objects[i] for i in allocation[1] ]
+			print("objects_agent_1 :",objects_agent_1)
+			print("objects_agent_2 :",objects_agent_2)
+			print(tour(agents[z_key[0]],objects_agent_1))
+			allocations[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
+			#allocations[allocation] = greaterValue - tour(agents[z_key[0]],z_value)
+		print("allocations :",allocations)
+
+		#z1 = 
+
+		nbre_round = 0
+
+		break
 
 	pass
