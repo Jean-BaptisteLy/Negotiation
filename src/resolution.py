@@ -10,10 +10,6 @@ from itertools import permutations
 from itertools import combinations
 from operator import itemgetter
 
-def smallestTour():
-	# TODO
-	pass
-
 def manhattanDistance(p1,p2):
 	(x1,y1) = p1
 	(x2,y2) = p2
@@ -102,14 +98,20 @@ def conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=
 	#return tuple(conflict_point)
 	return conflict_point
 
+'''
+# C'est directement implémenté dans negotiation() pour l'instant... à voir plus tard si on met ça au propre
 def zeuthens():
+	# TODO
 	pass
 
 def agreement():
+	# TODO
 	pass
 
 def nash_product():
+	# TODO
 	pass
+'''
 
 # Processus de négociation
 # greater value than the cost of the largest possible tour (greaterValue)
@@ -211,16 +213,9 @@ def negotiation(agents,objects,d,greaterValue):
 		allocations = {}
 		allocations_a1 = {}
 		allocations_a2 = {}
-		#print("z_value :",z_value)
 		for allocation in allocations_post_traitement:
-			#print("allocation :",allocation)
-			#print("allocation 1:",allocation[0])
-			#print("allocation 2:",allocation[1])
 			objects_agent_1 = [ objects[i] for i in allocation[0] ]
 			objects_agent_2 = [ objects[i] for i in allocation[1] ]
-			#print("objects_agent_1 :",objects_agent_1)
-			#print("objects_agent_2 :",objects_agent_2)
-			#print(tour(agents[z_key[0]],objects_agent_1))
 			allocations[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
 			allocations_a1[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
 			allocations_a2[allocation] = (greaterValue - tour(agents[z_key[0]],objects_agent_1),greaterValue - tour(agents[z_key[1]],objects_agent_2))
@@ -274,7 +269,9 @@ def negotiation(agents,objects,d,greaterValue):
 			print("allocations_a1 :",allocations_a1)
 			print("allocations_a2 :",allocations_a2)
 
-			
+		print("agreement :")
+		print("offer_a1 :",offer_a1)
+		print("offer_a1 :",offer_a1)
 			
 
 
