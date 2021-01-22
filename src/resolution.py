@@ -227,7 +227,6 @@ def negotiation(agents,objects,d,greaterValue):
 
 		z1 = max(allocations.items(), key=itemgetter(1))[0]
 
-		print("fdp")
 		print(z1)
 
 		nbre_round = 0
