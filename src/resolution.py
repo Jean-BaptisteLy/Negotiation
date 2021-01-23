@@ -41,7 +41,7 @@ def non_dominated_po(partitions):
         dominated = False
         # We add the task only if it is not dominated
         for other_part, other_ut in partitions.items():
-            if other_ut[0] > ut[0] and other_ut[1] > ut[1] and other_part != part:
+            if other_ut[0] >= ut[0] and other_ut[1] >= ut[1] and other_part != part:
                 dominated = True
                 continue
         if not dominated:
@@ -246,7 +246,7 @@ def negotiation(agents,objects,d,greaterValue):
 			(	(1,)	,	(2, 3)	)	,
 		)
 		'''
-		
+
 		tasks = []
 		for i in z_value:
 			tasks.append(list(objects.keys())[list(objects.values()).index(i)])
