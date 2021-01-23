@@ -126,10 +126,13 @@ def agent_utility(greaterValue,tour_value):
 
 # tournée entière
 # tournées des deux agents
-def conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None):
+def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
 	conflict_point = []
 	for key in key_Z:
-		conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
+		if key in utilities_conflict:
+			conflict_point.append(utilities_conflict[key])
+		else:
+			conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
 	#return tuple(conflict_point)
 	return conflict_point
 
@@ -174,16 +177,22 @@ def negotiation(agents,objects,d,greaterValue):
 	print("greaterValue :",greaterValue)
 
 	# point de conflit
-	key_Z = (1,2)
-	conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None)	
-	print("conflict_point :",conflict_point_value)
+	#key_Z = (1,2) # pour tester...
+	#conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None)	
+	#print("conflict_point :",conflict_point_value)
+
+	agreements = {}
+	nash_products = {}
+	utilities_conflict = {}
 
 	# Négociation par Monotonic Concession Protocol
 	for z_key,z_value in Z.items():
 
 		# Initialisation :
 		rounds = 0
-
+		#conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict)	
+		conflict_point_value = conflict_point(greaterValue,Z,z_key,agents,utilities_conflict)
+		print("conflict_point :",conflict_point_value)
 		# allocations # TODO
 		'''
 		combinaisons_allocations = list(permutations(z_value, len(z_value))) 
@@ -407,18 +416,28 @@ def negotiation(agents,objects,d,greaterValue):
 			print("allocations_a2 :",allocations_a2)
 			#input()
 
-		print("agreement :")
-		print("offer_a1 :",offer_a1)
-		print("offer_a2 :",offer_a2)
-			
 
+		# Tests
+		if z_key == (1,2):
+			offer_a1 = ((1,), (3, 2))
+			offer_a2 = ((1,), (3, 2))
 
-		#if 
+		# Agreement :
+		agreements[z_key] = [ offer_a1,offer_a2,allocations[offer_a1][0],allocations[offer_a2][1] ]
+		print("agreement :",agreements[z_key])
+
+		# Nash product :
+		nash_products[z_key] = ( allocations[offer_a1][0] - conflict_point_value[0] ) * ( allocations[offer_a2][1] - conflict_point_value[1] )
+		print("nash_products :",nash_products[z_key])
+
+		# Mettre à jour le point de conflit pour la prochaine négociation
+		utilities_conflict[z_key[0]] = allocations[offer_a1][0]
+		utilities_conflict[z_key[1]] = allocations[offer_a2][1]
 
 		
-		
+		print("Négociation entre les agents",z_key[0],"et",z_key[1],":")
 		for h in historic:
 			print(h)
-		break
+		#break
 
-	pass
+	print("Balanced outcome. End.")
