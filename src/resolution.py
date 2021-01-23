@@ -417,10 +417,13 @@ def negotiation(agents,objects,d,greaterValue):
 			#input()
 
 
+		# TO DELETE !!! tests en attendant le prof...
 		# Tests
+		print("---------- ATTENTION TESTS ATTENTION ----------")
 		if z_key == (1,2):
 			offer_a1 = ((1,), (3, 2))
 			offer_a2 = ((1,), (3, 2))
+		# TO DELETE !!! tests en attendant le prof...
 
 		# Agreement :
 		agreements[z_key] = [ offer_a1,offer_a2,allocations[offer_a1][0],allocations[offer_a2][1] ]
