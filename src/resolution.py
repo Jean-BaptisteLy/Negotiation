@@ -259,10 +259,10 @@ def negotiation(agents,objects,d,greaterValue):
 		tasks = []
 		for i in z_value:
 			tasks.append(list(objects.keys())[list(objects.values()).index(i)])
-		print("tasks :",tasks)
+		#print("tasks :",tasks)
 
 		partitions = partition(tasks)
-		print("partitions :",partitions)
+		#print("partitions :",partitions)
 		
 		allocations_pre_traitement = {}
 		allocations_a1 = {}
@@ -340,6 +340,7 @@ def negotiation(agents,objects,d,greaterValue):
 			# inférieur/supérieur ou égal pour les z ?????
 			# traiter cas particulier si on """concède""" tout ? cad si on supprime tous les éléments du dico => PROBLEME à gérer #TODO
 
+			
 			if cas == 1: # Le premier agent a concédé précédemment
 				if z1 >= z2:
 					cas = 0
@@ -347,7 +348,8 @@ def negotiation(agents,objects,d,greaterValue):
 				else:
 					#del allocations_a1[offer_a1]
 					allocations_a1_bis = deepcopy(allocations_a1)
-					del allocations_a1_bis[offer_a1]
+					#del allocations_a1_bis[offer_a1]
+					del allocations_a1[offer_a1]
 			elif cas == 2: # Le second agent a concédé précédemment
 				if z1 <= z2:
 					cas = 0
@@ -355,7 +357,8 @@ def negotiation(agents,objects,d,greaterValue):
 				else:
 					#del allocations_a2[offer_a2]
 					allocations_a2_bis = deepcopy(allocations_a2)
-					del allocations_a2_bis[offer_a2]
+					#del allocations_a2_bis[offer_a2]
+					del allocations_a2[offer_a2]
 			elif cas == 3: # Les deux agents ont concédé précédemment
 				if z1 == z2:
 					# TODO
@@ -390,6 +393,7 @@ def negotiation(agents,objects,d,greaterValue):
 				print("########## !!! Erreur !!! ##########")
 				print("cas :",cas)
 				input()
+			
 
 			# concession
 			if(cas == 0):
@@ -400,15 +404,21 @@ def negotiation(agents,objects,d,greaterValue):
 					del allocations_a1[offer_a1]
 					del allocations_a2[offer_a2]
 					cas = 3
-					print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
+					cas = 0
+					if offer_a1 != offer_a2:
+						print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
 				elif(z1 < z2):
 					del allocations_a1[offer_a1]
 					cas = 1
-					print("L'agent",z_key[0],"concède.")
+					#cas = 0
+					if offer_a1 != offer_a2:
+						print("L'agent",z_key[0],"concède.")
 				else: # z1 > z2
 					del allocations_a2[offer_a2]
 					cas = 2
-					print("L'agent",z_key[1],"concède.")
+					#cas = 0
+					if offer_a1 != offer_a2:
+						print("L'agent",z_key[1],"concède.")
 				allocations_a1_bis = deepcopy(allocations_a1)
 				allocations_a2_bis = deepcopy(allocations_a2)
 
@@ -417,6 +427,7 @@ def negotiation(agents,objects,d,greaterValue):
 			#input()
 
 
+		'''
 		# TO DELETE !!! tests en attendant le prof...
 		# Tests
 		print("---------- ATTENTION TESTS ATTENTION ----------")
@@ -424,6 +435,8 @@ def negotiation(agents,objects,d,greaterValue):
 			offer_a1 = ((1,), (3, 2))
 			offer_a2 = ((1,), (3, 2))
 		# TO DELETE !!! tests en attendant le prof...
+		'''
+
 
 		# Agreement :
 		agreements[z_key] = [ offer_a1,offer_a2,allocations[offer_a1][0],allocations[offer_a2][1] ]
