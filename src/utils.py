@@ -1,5 +1,14 @@
 from itertools import *
 
+def manhattanDistance(p1,p2):
+    """
+    Renvoie la distance de Manhattan entre les points p1 et p2
+    """
+	(x1,y1) = p1
+	(x2,y2) = p2
+	return abs(x1 - x2) + abs(y1 - y2)
+
+
 def partition(tasks):
     """
     Cacule toutes les partitions possibles étant donné un ensemble de tâches.
