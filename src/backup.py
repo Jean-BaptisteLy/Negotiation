@@ -347,6 +347,7 @@ def negotiation(agents,objects,d,greaterValue):
 					#del allocations_a2[offer_a2]
 					allocations_a2_bis = deepcopy(allocations_a2)
 					del allocations_a2_bis[offer_a2]
+			
 			elif cas == 3: # Les deux agents ont concédé précédemment
 				if z1 == z2:
 					# TODO
@@ -354,27 +355,57 @@ def negotiation(agents,objects,d,greaterValue):
 						rounds_bis += 1
 						allocations_a1_bis = deepcopy(allocations_a1)
 						allocations_a2_bis = deepcopy(allocations_a2)
-						agent_fixe = 1
-						del allocations_a2[offer_a2]
+						agent_fixe = 2
+						del allocations_a1[offer_a1]
 					else:
-						if agent_fixe == 1 and allocations_a2:
-							del allocations_a2[offer_a2]
-						elif agent_fixe == 1 and not allocations_a2:
-							agent_fixe = 2
-							allocations_a2 = deepcopy(allocations_a2_bis)
-							del allocations_a1[offer_a1]
-						elif agent_fixe == 2 and allocations_a1:
+						if agent_fixe == 2 and allocations_a1:
 							del allocations_a1[offer_a1]
 						elif agent_fixe == 2 and not allocations_a1:
 							agent_fixe = 1
 							allocations_a1 = deepcopy(allocations_a1_bis)
+							del allocations_a2[offer_a2]
+						elif agent_fixe == 1 and allocations_a2:
+							del allocations_a2[offer_a2]
+						elif agent_fixe == 1 and not allocations_a2:
+							agent_fixe = 2
+							allocations_a2 = deepcopy(allocations_a2_bis)
 							rounds_bis = 0
-							cas = 0
+							cas = 0				
 				else:
 					cas = 0
 					allocations_a1 = deepcopy(allocations_a1_bis)
 					allocations_a2 = deepcopy(allocations_a2_bis)
 					rounds_bis = 0
+			'''
+			elif cas == 3: # Les deux agents ont concédé précédemment
+				if z1 == z2:
+					# TODO
+					if rounds_bis == 0:
+						rounds_bis += 1
+						allocations_a1_bis = deepcopy(allocations_a1)
+						allocations_a2_bis = deepcopy(allocations_a2)
+						agent_fixe = 2
+						del allocations_a1[offer_a1]
+					else:
+						if agent_fixe == 2 and allocations_a1:
+							del allocations_a1[offer_a1]
+						elif agent_fixe == 2 and not allocations_a1:
+							agent_fixe = 1
+							allocations_a1 = deepcopy(allocations_a1_bis)
+							del allocations_a2[offer_a2]
+						elif agent_fixe == 1 and allocations_a2:
+							del allocations_a2[offer_a2]
+						elif agent_fixe == 1 and not allocations_a2:
+							agent_fixe = 2
+							allocations_a2 = deepcopy(allocations_a2_bis)
+							rounds_bis = 0
+							cas = 0				
+				else:
+					cas = 0
+					allocations_a1 = deepcopy(allocations_a1_bis)
+					allocations_a2 = deepcopy(allocations_a2_bis)
+					rounds_bis = 0
+			'''
 			elif cas == 0:
 				cas = 0
 			else:
