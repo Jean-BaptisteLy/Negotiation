@@ -170,13 +170,17 @@ def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
     
     return z1, z2
 
-# def agreement():
-#     # TODO
-#     pass
+def agreement(offer, allocations):
+    """
+    Renvoie l'allocation accordée (normalement offer_a1 = offer_a2) et leur utilité.
+    """
+    return [ offer, allocations[offer][0], allocations[offer][1] ]
 
-# def nash_product():
-#     # TODO
-#     pass
+def nash_product(offer, allocations, conflict_point):
+    """
+    Renvoie le produit de Nash d'après l'utlité de l'allocation accordé et le point de conflit.
+    """
+    (allocations[offer][0] - conflict_point[0] )* ( allocations[offer][1] - conflict_point[1])
 
 
 # Processus de négociation
@@ -333,10 +337,11 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
 
         cas = 0
         rounds_bis = 0
+        negotiation_failed = False
 
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
-        # TODO: rajouter condition while(offer_a1 != offer_a2) or (allocations1 == {}) or (allocations2 == {}) 
-        while(offer_a1 != offer_a2):
+        # TODO: on prend une allocation meme si elle nous donne comme utilité la meme chose que le point de conflit? ou il faut que ça soit strictement superieur?
+        while(offer_a1 != offer_a2) and not negotiation_failed:
 
             # Chaque agent propose comme offre celle qui lui convient le plus
             offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
@@ -361,10 +366,10 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
             # Calcul des valeurs de Zeuthen
             z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
             
-            print("z1 :",z1)
-            print("z2 :",z2)
             print("offer_a1 :",offer_a1)
             print("offer_a2 :",offer_a2)
+            print("z1 :",z1)
+            print("z2 :",z2)
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -459,6 +464,12 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
             print("allocations_a2 :",allocations_a2)
             #input()
 
+            # négotiation échouée
+            if allocations_a1 == {} or allocations_a2 == {}:
+                print("Négotiation échouée")
+                negotiation_failed = True
+                     
+
 
         '''
         # TO DELETE !!! tests en attendant le prof...
@@ -470,20 +481,23 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
         # TO DELETE !!! tests en attendant le prof...
         '''
 
+        if not negotiation_failed:
+            if offer_a1 == offer_a2:
+                # Agreement :
+                agreements[z_key] = agreement(offer_a1, allocations)
+                print("agreement :", agreements[z_key])
 
-        # Agreement :
-        agreements[z_key] = [ offer_a1,offer_a2,allocations[offer_a1][0],allocations[offer_a2][1] ]
-        print("agreement :",agreements[z_key])
-
-        # Nash product :
-        nash_products[z_key] = ( allocations[offer_a1][0] - conflict_point_value[0] ) * ( allocations[offer_a2][1] - conflict_point_value[1] )
-        print("nash_products :",nash_products[z_key])
+                # Nash product :
+                nash_products[z_key] = nash_product(offre_a1, allocations, conflict_point_value)
+                print("nash_products :",nash_products[z_key])
+            else:
+                print("Error somewhere...")
 
         # Mettre à jour le point de conflit pour la prochaine négociation
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]
         utilities_conflict[z_key[1]] = allocations[offer_a2][1]
 
-        
+        print("-------------------------------------------------------\n\n")
         print("Négociation entre les agents",z_key[0],"et",z_key[1],":")
         for h in historic:
             print(h)
