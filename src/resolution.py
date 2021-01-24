@@ -287,14 +287,14 @@ def negotiation(agents,objects,d,greaterValue):
 		allocations_a1_bis = deepcopy(allocations_post_traitement)
 		allocations_a2_bis = deepcopy(allocations_post_traitement)
 
-		print("allocations_a1 :",allocations_a1)
-		print("allocations_a2 :",allocations_a2)
+		print("allocations_a"+str(z_key[0])+" :",allocations_a1)
+		print("allocations_a"+str(z_key[1])+" :",allocations_a2)
 
 		offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
 		offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
 		historic = []
-		historic.append(str("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2"))
+		historic.append(str("round 		offer_a")+str(z_key[0])+str(" 		offer_a")+str(z_key[1])+str(" 		u1a1,u1a2 	u2a1,u2a2		z1		z2"))
 		#print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
 		cas = 0
