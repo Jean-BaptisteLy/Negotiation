@@ -151,6 +151,9 @@ def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
 
 
 # C'est directement implémenté dans negotiation() pour l'instant... à voir plus tard si on met ça au propre
+
+# Merci Pampam !
+
 def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
     """
     Calcule les valeurs de Zeuthen z1 et z2 selon la formule du cours,
@@ -189,26 +192,27 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
     """
     Négotiation bilatéral selon le MCP et la strátegie de Zeuthen
     """
-    print("agents :",agents)
-    print("objets :",objects)
-    print("distance d :",d)
-    print("valeur supplémantaire :",greaterValue)
-
+    print("Caractéristiques du problème :\n")
+    print("Agents :",agents)
+    print("Objets :",objects)
+    print("Distance de perception des agents :",d)
+    
     # objets visibles avec la distance d
     agents_visible_objects = perception(agents,objects,d)
-    print("agents_visible_objects :",agents_visible_objects)
+    print("Objets visibles par les agents :",agents_visible_objects)
 
     # ensemble Z (objets en commun)
     Z = set_Z(agents_visible_objects)
-    print("Z :",Z)
+    print("Ensembles Z :",Z)
 
     # la plus grande tournée
     biggestTour_value = biggestTour(Z,agents)
-    print("biggestTour :",biggestTour_value)
+    print("Coût de la plus grande tournée :",biggestTour_value)
+    print("Valeur supplémantaire ajoutée à :",greaterValue)
 
     # valeur plus grande que le coût de la plus grande tournée possible
     greaterValue += biggestTour_value
-    print("greaterValue :",greaterValue)
+    print("Valeur plus grande que le coût de la plus grande tournée possible :",greaterValue)
 
     # point de conflit
     #key_Z = (1,2) # pour tester...
@@ -219,14 +223,20 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
     nash_products = {}
     utilities_conflict = {}
 
+    print("")
+
     # Négociation par Monotonic Concession Protocol
     for z_key,z_value in Z.items():
+
+        print("-----------------------------------------------------------------------")
+        print("Négociation par Monotonic Concession Protocol entre les agents",z_key[0],"et",z_key[1],":")
+        print("-----------------------------------------------------------------------")
 
         # Initialisation :
         rounds = 0
         #conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict)	
         conflict_point_value = conflict_point(greaterValue,Z,z_key,agents,utilities_conflict)
-        print("conflict_point :",conflict_point_value)
+        print("Point de conflit :",conflict_point_value)
         # allocations # TODO
         '''
         combinaisons_allocations = list(permutations(z_value, len(z_value))) 
@@ -310,7 +320,7 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
             #allocations_a1[allocation] = (greaterValue - tour1 , greaterValue - tour2)
             #allocations_a2[allocation] = (greaterValue - tour1 , greaterValue - tour2)
 
-        print("allocations_pre_traitement :",allocations_pre_traitement)
+        #print("allocations_pre_traitement :",allocations_pre_traitement)
 
         allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 
@@ -321,8 +331,11 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
         allocations_a1_bis = deepcopy(allocations_post_traitement)
         allocations_a2_bis = deepcopy(allocations_post_traitement)
 
-        print("allocations_a1 :",allocations_a1)
-        print("allocations_a2 :",allocations_a2)
+        print("Allocation avec bargaining :")
+        if(allocations_a1 == allocations_a2):
+            print(allocations_a1)
+        else:
+            print("problem somewhere...")
 
         offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
         offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
@@ -332,7 +345,7 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
 
         historic = []
         #historic.append("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2")
-        historic.append("round 		offer_a" + str(id_1)+ " 		offer_a" + str(id_2) + " 		u1a" + str(id_1)+ ",u1a" + str(id_2)+ " 	u2a" +  str(id_1)+ ",u2a" +  str(id_2) )
+        historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
         #print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
         cas = 0
@@ -342,6 +355,8 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         # TODO: on prend une allocation meme si elle nous donne comme utilité la meme chose que le point de conflit? ou il faut que ça soit strictement superieur?
         while(offer_a1 != offer_a2) and not negotiation_failed:
+
+            print("Round",rounds+1,":")
 
             # Chaque agent propose comme offre celle qui lui convient le plus
             offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
@@ -366,10 +381,12 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
             # Calcul des valeurs de Zeuthen
             z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
             
+            '''
             print("offer_a1 :",offer_a1)
             print("offer_a2 :",offer_a2)
             print("z1 :",z1)
             print("z2 :",z2)
+            '''
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -441,8 +458,8 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
             # concession
             if(cas == 0):
                 rounds += 1
-                historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))))
-                print(historic[-1])
+                historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"     "+str(z1)+"     "+str(z2)))
+                #print(historic[-1])
                 if(z1 == z2):
                     del allocations_a1[offer_a1]
                     del allocations_a2[offer_a2]
@@ -465,13 +482,15 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                 allocations_a1_bis = deepcopy(allocations_a1)
                 allocations_a2_bis = deepcopy(allocations_a2)
 
+            '''
             print("allocations_a1 :",allocations_a1)
             print("allocations_a2 :",allocations_a2)
+            '''
             #input()
 
             # négotiation échouée
             if allocations_a1 == {} or allocations_a2 == {}:
-                print("Négotiation échouée")
+                print("La négociation a échouée...")
                 negotiation_failed = True
                      
 
@@ -493,7 +512,6 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                 print("agreement :", agreements[z_key])
 
                 # Nash product :
-                print(offer_a1, allocations, conflict_point_value)
                 nash_products[z_key] = nash_product(offer_a1, allocations, conflict_point_value)
                 print("nash_products :",nash_products[z_key])
             else:
@@ -503,10 +521,12 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]
         utilities_conflict[z_key[1]] = allocations[offer_a2][1]
 
-        print("-------------------------------------------------------\n\n")
+        print("-------------------------------------------------------------------------------------------------------")
         print("Négociation entre les agents",z_key[0],"et",z_key[1],":")
         for h in historic:
             print(h)
+        print("-------------------------------------------------------------------------------------------------------\n\n")
+
         #break
 
     print("Balanced outcome. End.")
