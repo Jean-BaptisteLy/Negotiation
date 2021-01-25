@@ -1,5 +1,14 @@
 from itertools import *
 
+def manhattanDistance(p1,p2):
+    """
+    Renvoie la distance de Manhattan entre les points p1 et p2
+    """
+	(x1,y1) = p1
+	(x2,y2) = p2
+	return abs(x1 - x2) + abs(y1 - y2)
+
+
 def partition(tasks):
     """
     Cacule toutes les partitions possibles étant donné un ensemble de tâches.
@@ -20,15 +29,15 @@ def non_dominated_po(partitions):
     qui sont Pareto-dominées.
     """
     # List of pareto-optimal points
-    po = []
+    po = {}
     for part, ut in partitions.items():
         dominated = False
         # We add the task only if it is not dominated
         for other_part, other_ut in partitions.items():
-            if other_ut[0] > ut[0] and other_ut[1] > ut[1] and other_part != part:
+            if (other_ut[0] > ut[0] and other_ut[1] > ut[1] and other_part != part) or (other_ut[0] > ut[0] and other_ut[1] == ut[1] and other_part != part) or (other_ut[0] == ut[0] and other_ut[1] > ut[1] and other_part != part) or (ut in po.values()):
                 dominated = True
                 continue
         if not dominated:
-            po.append(part)
+            po[part] = ut
         
     return po
