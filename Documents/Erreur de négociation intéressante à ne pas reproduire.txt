@@ -1,0 +1,45 @@
+Espace de négociation
+(tournée r1, tournée r2)
+
+(ABC,O) = (0,9)
+(AB,C) = (2,7)
+(O, ABC) = (9,0)
+(C, AB) = (4,2)
+
+
+(A, BC) = (7, 3)
+(BC, A) = (1, 4)
+(B, AC) = (5, 4)
+(AC, B) = (4, 7)
+
+Bargaining set = IR + PO
+
+Application du protocole
+On suppose point de conflit (0,0)
+
+t=1
+r1: (O,ABC) r2: (ABC,O)
+Z1: 1
+Z2: 1
+Les deux concèdent. 
+
+t=2
+r1: (A, BC) d'utilités (7,3) r2: (AC, B) d'utilités (4, 7)
+Z1: 3/7
+Z2:  4/7
+r1 concède
+
+# Tournée inutile, il faut faire en sorte que Z2 < Z1 pour passer directement à t=4 (qui se transforme dans le cas optimal à t=3)
+# Note du prof : Petite correction sur l'exemple résolu collectivement du Monotonic Negociation Protocol: au tour t=2 l'offre de r1 = (B,AC) donnant (5,4) comme vecteur d'utilité n'est pas une concession correcte: elle augmente bien l'utilité de l'agent r2, mais elle ne permet pas d'assurer que Z2<=Z1 (ie. que l'autre agent devra concéder au tour suivant), qui est l'autre condition à vérifier.
+t=3
+r1: (B, AC) d'utilité (5,4) -> plus grande utilité pour r1 après l'ancienne offre d'utilité (7,3)
+r2: (AC,B) qui maintient son offre d'utilité (4,7)
+Z1: 1/5
+Z2: 3/7
+r1 concède (encore)
+
+t=4
+r1: (AC, B) -> (4,7)
+r2: (AC,B) -> (4,7)
+z1 = 0 ?
+z2 = 0 ?

@@ -401,20 +401,31 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                 if z1 >= z2:
                     cas = 0
                     allocations_a1 = deepcopy(allocations_a1_bis)
-                else:
+                else:  # z1 < z2
                     #del allocations_a1[offer_a1]
-                    allocations_a1_bis = deepcopy(allocations_a1)
+                    #allocations_a1_bis = deepcopy(allocations_a1)
                     #del allocations_a1_bis[offer_a1]
                     del allocations_a1[offer_a1]
+                    print("Agent",z_key[0],": Mauvaise concession ! Je ne concède pas",offer_a1,"!")
+                    #print("offer_a",z_key[0],":",offer_a1)
+                    #print("offer_a",z_key[1],":",offer_a2)
+                    #print("allocations_a",z_key[0],":",allocations_a1)
+                    #print("allocations_a",z_key[1],":",allocations_a2)
             elif cas == 2: # Le second agent a concédé précédemment
                 if z1 <= z2:
                     cas = 0
                     allocations_a2 = deepcopy(allocations_a2_bis)
                 else:
                     #del allocations_a2[offer_a2]
-                    allocations_a2_bis = deepcopy(allocations_a2)
+                    #allocations_a2_bis = deepcopy(allocations_a2)
                     #del allocations_a2_bis[offer_a2]
                     del allocations_a2[offer_a2]
+                    print("Agent",z_key[1],": Mauvaise concession ! Je ne concède pas",offer_a2,"!")
+                    #print("offer_a",z_key[0],":",offer_a1)
+                    #print("offer_a",z_key[1],":",offer_a2)
+                    #print("allocations_a",z_key[0],":",allocations_a1)
+                    #print("allocations_a",z_key[1],":",allocations_a2)
+
             # TO DELETE RIEN A FAIRE EN VRAI POUR CE CAS 3
             # SAUF SI CONTESTATION
             elif cas == 3: # Les deux agents ont concédé précédemment
@@ -447,8 +458,9 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                     allocations_a2 = deepcopy(allocations_a2_bis)
                     rounds_bis = 0
                 '''
+                pass
             elif cas == 0:
-                cas = 0 # LOL
+                cas = 0 # LOL c'est un bouche-trou
             else:
                 print("########## !!! Erreur !!! ##########")
                 print("cas :",cas)
@@ -481,14 +493,16 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                         print("L'agent",z_key[1],"concède.")
                 allocations_a1_bis = deepcopy(allocations_a1)
                 allocations_a2_bis = deepcopy(allocations_a2)
+                print("allocations_a"+str(z_key[0])+" :",allocations_a1_bis)
+                print("allocations_a"+str(z_key[1])+" :",allocations_a2_bis)
 
             '''
-            print("allocations_a1 :",allocations_a1)
-            print("allocations_a2 :",allocations_a2)
+            print("allocations_a",z_key[0],":",allocations_a1)
+            print("allocations_a",z_key[1],":",allocations_a2)
             '''
             #input()
 
-            # négotiation échouée
+            # négociation échouée
             if allocations_a1 == {} or allocations_a2 == {}:
                 print("La négociation a échouée...")
                 negotiation_failed = True
