@@ -188,7 +188,13 @@ def nash_product(offer, allocations, conflict_point):
 
 # Processus de négociation
 # greater value than the cost of the largest possible tour (greaterValue)
-def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
+#def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
+#def negotiation(agents,objects,d,greaterValue):
+def negotiation(world,d,greaterValue):
+
+    agents = world.get_agents()
+    objects = world.get_objects()
+
     """
     Négotiation bilatéral selon le MCP et la strátegie de Zeuthen
     """
@@ -493,8 +499,10 @@ def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
                         print("L'agent",z_key[1],"concède.")
                 allocations_a1_bis = deepcopy(allocations_a1)
                 allocations_a2_bis = deepcopy(allocations_a2)
+                '''
                 print("allocations_a"+str(z_key[0])+" :",allocations_a1_bis)
                 print("allocations_a"+str(z_key[1])+" :",allocations_a2_bis)
+                '''
 
             '''
             print("allocations_a",z_key[0],":",allocations_a1)

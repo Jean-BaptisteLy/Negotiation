@@ -18,7 +18,7 @@ class World:
 			self.grid.append(liste)
 		self.agents = {}
 		self.objects = {}
-		self.d = 0
+		#self.d = 0
 
 	# crée les agents 
 	# input : list[(x,y)]
