@@ -496,7 +496,7 @@ def negotiation(world,d,greaterValue):
                 rounds += 1
                 historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
-                if(z1 == z2):
+                if(z1 == z2):  #same Z, both concede (voir le cours !)
                     del allocations_a1[offer_a1]
                     del allocations_a2[offer_a2]
                     #cas = 3
