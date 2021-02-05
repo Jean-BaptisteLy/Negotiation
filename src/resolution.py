@@ -563,10 +563,10 @@ def negotiation(world,d,greaterValue):
                     offer_agreement = random.choice([offer_a1,offer_a2])
                 elif u1a2 >= u1a1:
                     print("u1a2 >= u1a1")
-                    offer_agreement = offer_a1 # j'ai un doute
+                    offer_agreement = offer_a2 # j'ai un doute
                 elif u2a1 >= u2a2:
                     print("u2a1 >= u2a2")
-                    offer_agreement = offer_a2 # j'ai un doute
+                    offer_agreement = offer_a1 # j'ai un doute
                 else:
                     print("impossible... erreur")
                 # Agreement :
