@@ -60,13 +60,19 @@ def tour(depart, objects):
     """
     # Calcul de tous les possibles permutations (de taille len(objects)) de 'objects'
     tours = list(permutations(objects,len(objects)))
+    #print(tours)
     min_path = maxsize
     for t in tours:
         valeur_tournee = 0
+        #print(t)
+        #print("######################")
         new_depart = depart
         for i in range(len(t)):
+            #print(i)
+            #if i != len(t): # si pas encore arrivé à la fin
             valeur_tournee += manhattanDistance(new_depart,t[i])
             new_depart = t[i]
+            #print(valeur_tournee)
         if valeur_tournee < min_path:
             min_path = valeur_tournee
     return min_path
@@ -140,7 +146,13 @@ def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
             conflict_point.append(utilities_conflict[key])
         else:
             conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
+    #return tuple(conflict_point)
     return conflict_point
+
+
+# C'est directement implémenté dans negotiation() pour l'instant... à voir plus tard si on met ça au propre
+
+# Merci Pampam !
 
 def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
     """
@@ -175,6 +187,9 @@ def nash_product(offer, allocations, conflict_point):
 
 
 # Processus de négociation
+# greater value than the cost of the largest possible tour (greaterValue)
+#def negotiation(agents,objects,d,greaterValue, ids = ('1', '2', '3')):
+#def negotiation(agents,objects,d,greaterValue):
 def negotiation(world,d,greaterValue):
 
     agents = world.get_agents()
@@ -205,6 +220,11 @@ def negotiation(world,d,greaterValue):
     greaterValue += biggestTour_value
     print("Valeur plus grande que le coût de la plus grande tournée possible :",greaterValue)
 
+    # point de conflit
+    #key_Z = (1,2) # pour tester...
+    #conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,current_agent_1_utility_conflict=None,current_agent_2_utility_conflict=None)	
+    #print("conflict_point :",conflict_point_value)
+
     agreements = {}
     nash_products = {}
     utilities_conflict = {}
@@ -220,8 +240,71 @@ def negotiation(world,d,greaterValue):
 
         # Initialisation :
         rounds = 0
+        #conflict_point_value = conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict)	
         conflict_point_value = conflict_point(greaterValue,Z,z_key,agents,utilities_conflict)
         print("Point de conflit :",conflict_point_value)
+        # allocations # TODO
+        '''
+        combinaisons_allocations = list(permutations(z_value, len(z_value))) 
+        print("combinaisons_allocations :",combinaisons_allocations)
+        allocations_pre_traitement = {}
+        allocations_post_traitement = {} # bargaining
+        '''
+
+        '''
+        o1 = (3, 6)
+        o2 = (6, 8)
+        o3 = (5, 6)
+
+        ({o1, o2, o3}, O) = (3, 10)
+        ({o1, o2}, o3) = (3, 8)
+        ({o1, o3}, o2) = (6,7)
+        ({o2, o3}, o1) = (4, 6)
+        (O, {o1, o2, o3}) = (10, 2)
+        (o3, {o1, o2}) = (6, 2)
+        (o2, {o1, o3}) = (7,6)
+        (o1, {o2, o3}) = (8,5)
+        '''
+
+        # OUTPUT :  # TODO
+        '''
+        allocations_pre_traitement = (
+            (	((3, 6), (6, 8), (5, 6))	,	((None,None))	)	,
+            (	((3, 6), (6, 8))	,	((5, 6))	)	,
+            (	((3, 6), (5, 6))	,	((6, 8))	)	,
+            (	((6, 8), (5, 6))	,	((3, 6))	)	,
+            (	((None,None))	,	((3, 6), (6, 8), (5, 6))	)	,
+            (	((5, 6))	,	((3, 6), (6, 8))	)	,
+            (	((6, 8))	,	((3, 6), (5, 6))	)	,
+            (	((3, 6))	,	((6, 8), (5, 6))	)	,
+        )
+        allocations_post_traitement = (
+            (	((3, 6), (6, 8), (5, 6))	,	((None,None))	)	,
+            (	((3, 6), (5, 6))	,	((6, 8))	)	,
+            (	((None,None))	,	((3, 6), (6, 8), (5, 6))	)	,
+            (	((6, 8))	,	((3, 6), (5, 6))	)	,
+            (	((3, 6))	,	((6, 8), (5, 6))	)	,
+        )
+        '''
+        '''
+        allocations_pre_traitement = (
+            (	(1, 2, 3)	,	(None)	)	,
+            (	(1, 2)	,	(3,)	)	,
+            (	(1, 3)	,	(2,)	)	,
+            (	(2, 3)	,	(1,)	)	,
+            (	()	,	(1, 2, 3)	)	,
+            (	(3,)	,	(1, 2)	)	,
+            (	(2,)	,	(1, 3)	)	,
+            (	(1,)	,	(2, 3)	)	,
+        )
+        allocations_post_traitement = (
+            (	(1, 2, 3)	,	()	)	,
+            (	(1, 3)	,	(2,)	)	,
+            (	()	,	(1, 2, 3)	)	,
+            (	(2,)	,	(1, 3)	)	,
+            (	(1,)	,	(2, 3)	)	,
+        )
+        '''
 
         tasks = []
         for i in z_value:
@@ -240,6 +323,10 @@ def negotiation(world,d,greaterValue):
             tour1 = tour(agents[z_key[0]],objects_agent_1)
             tour2 = tour(agents[z_key[1]],objects_agent_2)
             allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+            #allocations_a1[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+            #allocations_a2[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+
+        #print("allocations_pre_traitement :",allocations_pre_traitement)
 
         allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 
@@ -263,7 +350,9 @@ def negotiation(world,d,greaterValue):
         id_1, id_2 = z_key[0], z_key[1]
 
         historic = []
+        # historic.append("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2")
         historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
+        # print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
         cas = 0
         rounds_bis = 0
@@ -272,6 +361,10 @@ def negotiation(world,d,greaterValue):
         # Chaque agent propose comme offre celle qui lui convient le plus
         offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
         offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+
+        # Tests
+        #offer_a1 = ((1,), (3, 2))
+        #offer_a2 = ((1,), (3, 2))
 
         # Calcul des utilités selon les offres
         u1a1 = allocations[offer_a1][0]
@@ -290,14 +383,31 @@ def negotiation(world,d,greaterValue):
                 offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
                 offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
+                # Tests
+                #offer_a1 = ((1,), (3, 2))
+                #offer_a2 = ((1,), (3, 2))
+
                 # Calcul des utilités selon les offres
                 u1a1 = allocations[offer_a1][0]
                 u1a2 = allocations[offer_a2][0]
                 u2a1 = allocations[offer_a1][1]
                 u2a2 = allocations[offer_a2][1]
 
+            '''
+            rounds += 1
+            historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))))
+            #print(rounds,"		",offer_a1," 	",offer_a2,"	",(u1a1,u1a2),"		",(u2a1,u2a2))
+            '''
+
             # Calcul des valeurs de Zeuthen
             z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
+            
+            '''
+            print("offer_a1 :",offer_a1)
+            print("offer_a2 :",offer_a2)
+            print("z1 :",z1)
+            print("z2 :",z2)
+            '''
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -313,17 +423,62 @@ def negotiation(world,d,greaterValue):
                     cas = 0
                     allocations_a1 = deepcopy(allocations_a1_bis)
                 else:  # z1 < z2
+                    #del allocations_a1[offer_a1]
+                    #allocations_a1_bis = deepcopy(allocations_a1)
+                    #del allocations_a1_bis[offer_a1]
                     del allocations_a1[offer_a1]
                     print("Agent",z_key[0],": Mauvaise concession ! Je ne concède pas",offer_a1,"!")
+                    #print("offer_a",z_key[0],":",offer_a1)
+                    #print("offer_a",z_key[1],":",offer_a2)
+                    #print("allocations_a",z_key[0],":",allocations_a1)
+                    #print("allocations_a",z_key[1],":",allocations_a2)
             elif cas == 2: # Le second agent a concédé précédemment
                 if z1 <= z2:
                     cas = 0
                     allocations_a2 = deepcopy(allocations_a2_bis)
                 else:
+                    #del allocations_a2[offer_a2]
+                    #allocations_a2_bis = deepcopy(allocations_a2)
+                    #del allocations_a2_bis[offer_a2]
                     del allocations_a2[offer_a2]
                     print("Agent",z_key[1],": Mauvaise concession ! Je ne concède pas",offer_a2,"!")
+                    #print("offer_a",z_key[0],":",offer_a1)
+                    #print("offer_a",z_key[1],":",offer_a2)
+                    #print("allocations_a",z_key[0],":",allocations_a1)
+                    #print("allocations_a",z_key[1],":",allocations_a2)
 
+            # TO DELETE RIEN A FAIRE EN VRAI POUR CE CAS 3
+            # SAUF SI CONTESTATION
             elif cas == 3: # Les deux agents ont concédé précédemment
+                '''
+                if z1 == z2:
+                    # TODO
+                    if rounds_bis == 0:
+                        rounds_bis += 1
+                        allocations_a1_bis = deepcopy(allocations_a1)
+                        allocations_a2_bis = deepcopy(allocations_a2)
+                        agent_fixe = 1
+                        del allocations_a2[offer_a2]
+                    else:
+                        if agent_fixe == 1 and allocations_a2:
+                            del allocations_a2[offer_a2]
+                        elif agent_fixe == 1 and not allocations_a2:
+                            agent_fixe = 2
+                            allocations_a2 = deepcopy(allocations_a2_bis)
+                            del allocations_a1[offer_a1]
+                        elif agent_fixe == 2 and allocations_a1:
+                            del allocations_a1[offer_a1]
+                        elif agent_fixe == 2 and not allocations_a1:
+                            agent_fixe = 1
+                            allocations_a1 = deepcopy(allocations_a1_bis)
+                            rounds_bis = 0
+                            cas = 0
+                else:
+                    cas = 0
+                    allocations_a1 = deepcopy(allocations_a1_bis)
+                    allocations_a2 = deepcopy(allocations_a2_bis)
+                    rounds_bis = 0
+                '''
                 pass
             elif cas == 0:
                 cas = 0 # LOL c'est un bouche-trou
@@ -341,23 +496,60 @@ def negotiation(world,d,greaterValue):
                 if(z1 == z2):  #same Z, both concede (voir le cours !)
                     del allocations_a1[offer_a1]
                     del allocations_a2[offer_a2]
+                    #cas = 3
                     cas = 0
+                    '''
+                    if offer_a1 != offer_a2:
+                        print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
+                    '''
                     print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
                 elif(z1 < z2):
                     del allocations_a1[offer_a1]
                     cas = 1
+                    #cas = 0
+                    '''
+                    if offer_a1 != offer_a2:
+                        print("L'agent",z_key[0],"concède.")
+                    '''
                     print("L'agent",z_key[0],"concède.")
                 else: # z1 > z2
                     del allocations_a2[offer_a2]
                     cas = 2
+                    #cas = 0
+                    '''
+                    if offer_a1 != offer_a2:
+                        print("L'agent",z_key[1],"concède.")
+                    '''
                     print("L'agent",z_key[1],"concède.")
                 allocations_a1_bis = deepcopy(allocations_a1)
                 allocations_a2_bis = deepcopy(allocations_a2)
+                '''
+                print("allocations_a"+str(z_key[0])+" :",allocations_a1_bis)
+                print("allocations_a"+str(z_key[1])+" :",allocations_a2_bis)
+                '''
+
+            '''
+            print("allocations_a",z_key[0],":",allocations_a1)
+            print("allocations_a",z_key[1],":",allocations_a2)
+            '''
+            #input()
 
             # négociation échouée
             if allocations_a1 == {} or allocations_a2 == {}:
                 print("La négociation a échouée...")
                 negotiation_failed = True
+                     
+
+
+        '''
+        # TO DELETE !!! tests en attendant le prof...
+        # Tests
+        print("---------- ATTENTION TESTS ATTENTION ----------")
+        if z_key == (1,2):
+            offer_a1 = ((1,), (3, 2))
+            offer_a2 = ((1,), (3, 2))
+        # TO DELETE !!! tests en attendant le prof...
+        '''
 
         if not negotiation_failed:
             #if offer_a1 == offer_a2:
@@ -368,10 +560,10 @@ def negotiation(world,d,greaterValue):
                     offer_agreement = random.choice([offer_a1,offer_a2])
                 elif u1a2 >= u1a1:
                     print("u1a2 >= u1a1")
-                    offer_agreement = offer_a2
+                    offer_agreement = offer_a2 # j'ai un doute
                 elif u2a1 >= u2a2:
                     print("u2a1 >= u2a2")
-                    offer_agreement = offer_a1
+                    offer_agreement = offer_a1 # j'ai un doute
                 else:
                     print("impossible... erreur")
                 # Agreement :
@@ -393,5 +585,7 @@ def negotiation(world,d,greaterValue):
         for h in historic:
             print(h)
         print("-------------------------------------------------------------------------------------------------------\n\n")
+
+        #break
 
     print("Balanced outcome. End.")
