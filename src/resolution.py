@@ -350,9 +350,9 @@ def negotiation(world,d,greaterValue):
         id_1, id_2 = z_key[0], z_key[1]
 
         historic = []
-        #historic.append("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2")
+        # historic.append("round 		offer_a1 		offer_a2 		u1a1,u1a2 	u2a1,u2a2")
         historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
-        #print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
+        # print("round 		offer_a1 		offer_a2 		u1a1,u1a2 		u2a1,u2a2")
 
         cas = 0
         rounds_bis = 0
@@ -373,9 +373,6 @@ def negotiation(world,d,greaterValue):
         u2a2 = allocations[offer_a2][1]
 
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
-        # TODO: on prend une allocation meme si elle nous donne comme utilité la meme chose que le point de conflit? ou il faut que ça soit strictement superieur?
-
-        #while(offer_a1 != offer_a2) and not negotiation_failed:
         while (rounds == 0) or (u1a2 < u1a1 and u2a1 < u2a2 and not negotiation_failed):
         # u1a2 >= u1a1 or u2a1 >= u2a2 alors agreement
 
