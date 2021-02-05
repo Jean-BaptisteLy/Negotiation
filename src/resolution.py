@@ -501,20 +501,29 @@ def negotiation(world,d,greaterValue):
                     del allocations_a2[offer_a2]
                     #cas = 3
                     cas = 0
+                    '''
                     if offer_a1 != offer_a2:
                         print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
+                    '''
+                    print("L'agent",z_key[0],"et l'agent",z_key[1],"concèdent.")
                 elif(z1 < z2):
                     del allocations_a1[offer_a1]
                     cas = 1
                     #cas = 0
+                    '''
                     if offer_a1 != offer_a2:
                         print("L'agent",z_key[0],"concède.")
+                    '''
+                    print("L'agent",z_key[0],"concède.")
                 else: # z1 > z2
                     del allocations_a2[offer_a2]
                     cas = 2
                     #cas = 0
+                    '''
                     if offer_a1 != offer_a2:
                         print("L'agent",z_key[1],"concède.")
+                    '''
+                    print("L'agent",z_key[1],"concède.")
                 allocations_a1_bis = deepcopy(allocations_a1)
                 allocations_a2_bis = deepcopy(allocations_a2)
                 '''
@@ -548,12 +557,24 @@ def negotiation(world,d,greaterValue):
         if not negotiation_failed:
             #if offer_a1 == offer_a2:
             if u1a2 >= u1a1 or u2a1 >= u2a2:
+                if u1a2 >= u1a1 and u2a1 >= u2a2:
+                    print("u1a2 >= u1a1 and u2a1 >= u2a2")
+                    print("flip a coin because both agents agree")
+                    offer_agreement = random.choice([offer_a1,offer_a2])
+                elif u1a2 >= u1a1:
+                    print("u1a2 >= u1a1")
+                    offer_agreement = offer_a1 # j'ai un doute
+                elif u2a1 >= u2a2:
+                    print("u2a1 >= u2a2")
+                    offer_agreement = offer_a2 # j'ai un doute
+                else:
+                    print("impossible... erreur")
                 # Agreement :
-                agreements[z_key] = agreement(offer_a1, allocations)
+                agreements[z_key] = agreement(offer_agreement, allocations)
                 print("agreement :", agreements[z_key])
 
                 # Nash product :
-                nash_products[z_key] = nash_product(offer_a1, allocations, conflict_point_value)
+                nash_products[z_key] = nash_product(offer_agreement, allocations, conflict_point_value)
                 print("nash_products :",nash_products[z_key])
             else:
                 print("Error somewhere...")
