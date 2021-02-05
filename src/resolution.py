@@ -358,25 +358,43 @@ def negotiation(world,d,greaterValue):
         rounds_bis = 0
         negotiation_failed = False
 
+        # Chaque agent propose comme offre celle qui lui convient le plus
+        offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
+        offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+
+        # Tests
+        #offer_a1 = ((1,), (3, 2))
+        #offer_a2 = ((1,), (3, 2))
+
+        # Calcul des utilités selon les offres
+        u1a1 = allocations[offer_a1][0]
+        u1a2 = allocations[offer_a2][0]
+        u2a1 = allocations[offer_a1][1]
+        u2a2 = allocations[offer_a2][1]
+
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         # TODO: on prend une allocation meme si elle nous donne comme utilité la meme chose que le point de conflit? ou il faut que ça soit strictement superieur?
-        while(offer_a1 != offer_a2) and not negotiation_failed:
+
+        #while(offer_a1 != offer_a2) and not negotiation_failed:
+        while (rounds == 0) or (u1a2 < u1a1 and u2a1 < u2a2 and not negotiation_failed):
+        # u1a2 >= u1a1 or u2a1 >= u2a2 alors agreement
 
             print("Round",rounds+1,":")
 
-            # Chaque agent propose comme offre celle qui lui convient le plus
-            offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
-            offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+            if rounds > 0: # pour éviter de recalculer au premier round, optimisation mdr...
+                # Chaque agent propose comme offre celle qui lui convient le plus
+                offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
+                offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
-            # Tests
-            #offer_a1 = ((1,), (3, 2))
-            #offer_a2 = ((1,), (3, 2))
+                # Tests
+                #offer_a1 = ((1,), (3, 2))
+                #offer_a2 = ((1,), (3, 2))
 
-            # Calcul des utilités selon les offres
-            u1a1 = allocations[offer_a1][0]
-            u1a2 = allocations[offer_a2][0]
-            u2a1 = allocations[offer_a1][1]
-            u2a2 = allocations[offer_a2][1]
+                # Calcul des utilités selon les offres
+                u1a1 = allocations[offer_a1][0]
+                u1a2 = allocations[offer_a2][0]
+                u2a1 = allocations[offer_a1][1]
+                u2a2 = allocations[offer_a2][1]
 
             '''
             rounds += 1
@@ -476,7 +494,7 @@ def negotiation(world,d,greaterValue):
             # concession
             if(cas == 0):
                 rounds += 1
-                historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"     "+str(z1)+"     "+str(z2)))
+                historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
                 if(z1 == z2):
                     del allocations_a1[offer_a1]
@@ -528,7 +546,8 @@ def negotiation(world,d,greaterValue):
         '''
 
         if not negotiation_failed:
-            if offer_a1 == offer_a2:
+            #if offer_a1 == offer_a2:
+            if u1a2 >= u1a1 or u2a1 >= u2a2:
                 # Agreement :
                 agreements[z_key] = agreement(offer_a1, allocations)
                 print("agreement :", agreements[z_key])
