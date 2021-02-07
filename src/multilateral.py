@@ -10,6 +10,14 @@ from itertools import permutations, product
 from itertools import combinations
 from operator import itemgetter
 
+'''
+TODO :
+set_Z
+tasks + partitions
+non_dominated_po
+utiliser pandas pour afficher l'historique...?
+'''
+
 def manhattanDistance(p1,p2):
     """
     Renvoie la distance de Manhattan entre les points p1 et p2
@@ -142,24 +150,21 @@ def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
             conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
     return conflict_point
 
-def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
+#def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
+def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
     """
-    Calcule les valeurs de Zeuthen z1 et z2 selon la formule du cours,
-    à l'aide des utilités des offres proposés et le point de conflit.
+    Calcule les valeurs de Zeuthen selon la formule du cours,
+    à l'aide des utilités des offres proposées et le point de conflit.
     """
-    # Z1
-    if(u1a1 == conflict_point_value[0]):
-        z1 = 1
-    else:			
-        z1 = (u1a1 - u1a2) / (u1a1 - conflict_point_value[0])
-
-    # Z2
-    if(u2a2 == conflict_point_value[1]):
-        z2 = 1
-    else:			
-        z2 = (u2a2 - u2a1) / (u2a2 - conflict_point_value[1])
+    z = []
+    for u in range(len(utilities)):
+        if utilities[u][u] == 0:
+            z.append(1)
+        else:
+            temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
+            z.append(temp)
     
-    return z1, z2
+    return z
 
 def agreement(offer, allocations):
     """
@@ -194,6 +199,13 @@ def negotiation(world,d,greaterValue):
 
     # ensemble Z (objets en commun)
     Z = set_Z(agents_visible_objects)
+
+    # TO DELETE
+    # Tests :
+    #Z = {(1, 2, 3): [(6, 4), (8, 3), (6, 8), (5, 6), (3, 6), (9, 5)]}
+    Z = {(1, 2, 3): [(8,5),(8,7),(10,6)]}
+    # TO DELETE
+
     print("Ensembles Z :",Z)
 
     # la plus grande tournée
@@ -215,7 +227,7 @@ def negotiation(world,d,greaterValue):
     for z_key,z_value in Z.items():
 
         print("-----------------------------------------------------------------------")
-        print("Négociation par Monotonic Concession Protocol entre les agents",z_key[0],"et",z_key[1],":")
+        print("Négociation par Monotonic Concession Protocol entre les agents",z_key,":")
         print("-----------------------------------------------------------------------")
 
         # Initialisation :
@@ -226,58 +238,119 @@ def negotiation(world,d,greaterValue):
         tasks = []
         for i in z_value:
             tasks.append(list(objects.keys())[list(objects.values()).index(i)])
-        #print("tasks :",tasks)
+        print("tasks :",tasks)
 
         partitions = partition(tasks)
-        #print("partitions :",partitions)
+
+        # TO DELETE
+        # Tests
+        partitions = [((1, 2, 3), (), ()), ((1, 2), (3,), ()), ((1, 3), (2,), ()), ((1,), (2, 3),()), ((2, 3), (1,), ()), ((2,), (1, 3), ()), ((3,), (1, 2), ()), ((), (1, 2, 3), ())]
+        partitions += [((1, 2), (), (3,)), ((1, 3), (), (2,)), ((1,), (), (2, 3)), ((2, 3), (), (1,)), ((2,), (), (1, 3)), ((3,), (), (1, 2))]
+        partitions += [((), (1, 2), (3,)), ((), (1, 3), (2,)), ((), (1,), (2, 3)), ((), (2, 3), (1,)), ((), (2,), (1, 3)), ((), (3,), (1, 2))]
+        partitions += [((1,), (2,), (3,))]
+        partitions += [((), (), (1, 2, 3))]
+        # TO DELETE
+
+        print("partitions :",partitions)
         
         allocations_pre_traitement = {}
         allocations_a1 = {}
         allocations_a2 = {}
+        #tours = []
         for allocation in partitions:
+            tours = []
+            #print("allocation :",allocation)
+            '''
             objects_agent_1 = [ objects[i] for i in allocation[0] ]
             objects_agent_2 = [ objects[i] for i in allocation[1] ]
             tour1 = tour(agents[z_key[0]],objects_agent_1)
             tour2 = tour(agents[z_key[1]],objects_agent_2)
-            allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+            '''
+            for a in range(len(allocation)):
+                tours.append( tour( agents[z_key[a]] , [ objects[i] for i in allocation[a] ] ) )
+                    
+            #allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+            allocations_pre_traitement[allocation] = []
+            for t in tours:
+                allocations_pre_traitement[allocation].append(greaterValue - t)
 
+        print("allocations_pre_traitement :",allocations_pre_traitement)
+        
         allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 
+        # TO DELETE
+        # tests...
+        allocations_post_traitement = allocations_pre_traitement
+        # TO DELETE
+
         allocations = deepcopy(allocations_post_traitement)
+        allocations_a = []
+        allocations_a_bis = []
+        for i in range(len(z_key)):
+            allocations_a.append(deepcopy(allocations_post_traitement))
+            allocations_a_bis.append(deepcopy(allocations_post_traitement))
+
+        ''' TO DELETE
         allocations_a1 = deepcopy(allocations_post_traitement)
         allocations_a2 = deepcopy(allocations_post_traitement)
 
         allocations_a1_bis = deepcopy(allocations_post_traitement)
         allocations_a2_bis = deepcopy(allocations_post_traitement)
+        '''
 
         print("Allocation avec bargaining :")
+        print(allocations_a[0])
+
+        ''' TO DELETE ???
         if(allocations_a1 == allocations_a2):
             print(allocations_a1)
         else:
             print("problem somewhere...")
+        '''
 
+        # Chaque agent propose l'offre celle qui lui convient le plus
+        offers = []
+        for i in range(len(z_key)):
+            offers.append(max(allocations_a[0], key=lambda k: allocations_a[0][k][i]))
+        print("offers :",offers)
+
+        ''' TO DELETE
         offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
         offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+        '''
 
         # ids
-        id_1, id_2 = z_key[0], z_key[1]
+        ids = []
+        for i in range(len(z_key)):
+            ids.append(z_key[i])
+        print("ids :",ids)
 
-        historic = []
-        historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
+        # TO DELETE
+        #id_1, id_2 = z_key[0], z_key[1]
+
+        #historic = []
+        #historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
 
         cas = 0
         rounds_bis = 0
         negotiation_failed = False
 
-        # Chaque agent propose comme offre celle qui lui convient le plus
-        offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
-        offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+        # Calculs des utilités selon les offres
+        utilities = []
+        for i in range(len(z_key)):
+            temp = []
+            for j in range(len(z_key)):
+                temp.append(allocations[offers[j]][i])
+            utilities.append(temp)
+        print("utilities :",utilities)
 
+        ''' TO DELETE
         # Calcul des utilités selon les offres
         u1a1 = allocations[offer_a1][0]
         u1a2 = allocations[offer_a2][0]
         u2a1 = allocations[offer_a1][1]
         u2a2 = allocations[offer_a2][1]
+        '''
 
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         while (rounds == 0) or (u1a2 < u1a1 and u2a1 < u2a2 and not negotiation_failed):
@@ -286,18 +359,25 @@ def negotiation(world,d,greaterValue):
             print("Round",rounds+1,":")
 
             if rounds > 0: # pour éviter de recalculer au premier round, optimisation mdr...
-                # Chaque agent propose comme offre celle qui lui convient le plus
-                offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
-                offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+                # Chaque agent propose l'offre celle qui lui convient le plus
+                offers = []
+                for i in range(len(z_key)):
+                    offers.append(max(allocations_a[0], key=lambda k: allocations_a[0][k][i]))
+                print("offers :",offers)
 
-                # Calcul des utilités selon les offres
-                u1a1 = allocations[offer_a1][0]
-                u1a2 = allocations[offer_a2][0]
-                u2a1 = allocations[offer_a1][1]
-                u2a2 = allocations[offer_a2][1]
+                # Calculs des utilités selon les offres
+                utilities = []
+                for i in range(len(z_key)):
+                    temp = []
+                    for j in range(len(z_key)):
+                        temp.append(allocations[offers[j]][i])
+                    utilities.append(temp)
+                print("utilities :",utilities)
 
-            # Calcul des valeurs de Zeuthen
-            z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
+            # Calculs des valeurs de Zeuthen
+            #z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
+            zeuthen = zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value)
+            print("zeuthen :",zeuthen)
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -336,7 +416,7 @@ def negotiation(world,d,greaterValue):
             # concession
             if(cas == 0):
                 rounds += 1
-                historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
+                #historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
                 if(z1 == z2):  #same Z, both concede (voir le cours !)
                     del allocations_a1[offer_a1]

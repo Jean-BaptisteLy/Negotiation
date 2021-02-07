@@ -229,7 +229,7 @@ def negotiation(world,d,greaterValue):
         #print("tasks :",tasks)
 
         partitions = partition(tasks)
-        #print("partitions :",partitions)
+        print("partitions :",partitions)
         
         allocations_pre_traitement = {}
         allocations_a1 = {}
@@ -240,6 +240,8 @@ def negotiation(world,d,greaterValue):
             tour1 = tour(agents[z_key[0]],objects_agent_1)
             tour2 = tour(agents[z_key[1]],objects_agent_2)
             allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
+
+        print("allocations_pre_traitement :",allocations_pre_traitement)
 
         allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 
@@ -256,6 +258,7 @@ def negotiation(world,d,greaterValue):
         else:
             print("problem somewhere...")
 
+        # Chaque agent propose l'offre celle qui lui convient le plus
         offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
         offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
@@ -268,10 +271,6 @@ def negotiation(world,d,greaterValue):
         cas = 0
         rounds_bis = 0
         negotiation_failed = False
-
-        # Chaque agent propose comme offre celle qui lui convient le plus
-        offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
-        offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
 
         # Calcul des utilités selon les offres
         u1a1 = allocations[offer_a1][0]
