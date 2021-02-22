@@ -156,7 +156,13 @@ def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
         if utilities[u][u] == 0:
             z.append(1)
         else:
-            temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
+            print("utilities[",u,"][",u,"] =",utilities[u][u])
+            # je ne sais pas, c'est pour éviter d'avoir un zéro dans le dénominateur...
+            if ( utilities[u][u] - conflict_point_value[u] == 0 ):
+                temp = 1
+            else:
+                temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
+            #temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
             z.append(temp)  
     return z
 
@@ -440,7 +446,7 @@ def negotiation(world,d,greaterValue):
                     break
 
             # vérification de l'agreement
-            if not negotiation_failed:         
+            if not negotiation_failed:     
                 for i in range(len(z_key)):
                     for j in range(len(z_key)):
                         if utilities[j][i] < utilities[j][j]:
@@ -451,7 +457,7 @@ def negotiation(world,d,greaterValue):
                     if agreement:
                         break
 
-            input()
+            #input()
 
         if not negotiation_failed:
             #if offer_a1 == offer_a2:
