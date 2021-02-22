@@ -167,12 +167,18 @@ def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
     return z
 
 def zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value):
-    #TODO
-    pass
+    z = []
+    for u in range(len(utilities)):
+        temp = 1
+        for k in utilities[u]:
+            temp = temp * utilities[k][u]
+        z.append(temp)
+    return z
 
 def zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value):
-    #TODO
-    pass
+    z = []
+    
+    return z
 
 def agreement(offer, allocations):
     """
@@ -428,13 +434,17 @@ def negotiation(world,d,greaterValue):
                 rounds += 1
                 #historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
+
+                # on prend les agents qui ont la valeur minimale de zeuthen
                 agents_concede = [i for i, x in enumerate(zeuthen) if x == min(zeuthen)]
                 print("agents_concede :",agents_concede)
 
+                # ces agents concèdent leur offre
                 for ac in agents_concede:
                     del allocations_a[ac][offers[ac]]
                 print("allocations_a :",allocations_a)
 
+                # on met à les allocations (car certains ont concédé avant)
                 for i in range(len(allocations_a_bis)):
                     allocations_a_bis[i] = deepcopy(allocations_a[i])
 
