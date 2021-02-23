@@ -26,7 +26,8 @@ qui n'a pas de grille
 théoriquement, le multilateral généralise tout,
 donc il serait possible de l'utiliser aussi pour le cas de deux agents seulement ?
 
-TODO : si plusieurs sont agree, faire un flip coin
+faire la concession
+
 '''
 
 def manhattanDistance(p1,p2):
@@ -503,8 +504,6 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("on fait un flip dice sur ces agents qui possèdent les meilleures offres :")
             print("best_agents_ offers :",best_agents_offers)
             offer_agreement = offers[random.choice(best_agents_offers)]
-
-
 
             '''
             if u1a2 >= u1a1 or u2a1 >= u2a2:
