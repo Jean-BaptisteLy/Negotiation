@@ -130,22 +130,35 @@ def perception(agents,objects,d):
 def set_Z(agents_visible_objects):
     """
     {a:[(x,y)]} -> dict (agent1,agent2) : [(x,y)]
-    Renvoie un dictionnaire représentant les objects communs entre chaque couple d'agents.
+    Renvoie un dictionnaire représentant les objects communs entre chaque groupe d'agents.
     """
     # objets en commun
     Z = {}
-    # toutes les combinaisons possibles, formation des couples d'agents
-    couples = list(map(dict,combinations(agents_visible_objects.items(), 2)))
-    for couple in couples:
+    # toutes les combinaisons possibles, formation des groupes d'agents
+    i = len(agents_visible_objects)
+    groupes = []
+    while(i > 1):
+        groupe = list(map(dict,combinations(agents_visible_objects.items(), i)))             
+        groupes += groupe
+        i -= 1
+    for groupe in groupes:
         fusion_liste = []
         partners = []
-        for couple_key,couple_value in couple.items():
-            fusion_liste.append(couple_value)
-            partners.append(couple_key)
-        # éléments en communs dans un couple d'agents
-        common_elements = list(set(fusion_liste[0]).intersection(fusion_liste[1]))
-        if common_elements: # si éléments en commun, couple confirmé
-            Z[(partners[0],partners[1])] = common_elements
+        for groupe_key,groupe_value in groupe.items():
+            fusion_liste.append(groupe_value)
+            partners.append(groupe_key)
+        # éléments en communs dans un groupe d'agents
+        common_elements_before = set(fusion_liste[0])
+        for s in fusion_liste[1:]:
+            common_elements_before.intersection_update(s)
+        common_elements_after = deepcopy(common_elements_before)
+        for key,value in Z.items():
+            if set(tuple(partners)).issubset(key):
+                for c in common_elements_before:
+                    if c in value:
+                        common_elements_after.remove(c)
+        if common_elements_after: # si éléments en commun, groupe confirmé (si liste non vide en fait...)
+            Z[tuple(partners)] = common_elements_after     
     return Z
 
 # tournée entière
@@ -235,7 +248,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
     # TO DELETE
     # Tests :
     #Z = {(1, 2, 3): [(6, 4), (8, 3), (6, 8), (5, 6), (3, 6), (9, 5)]}
-    Z = {(1, 2, 3): [(8,5),(8,7),(10,6)]}
+    #Z = {(1, 2, 3): [(8,5),(8,7),(10,6)]}
     # TO DELETE
 
     print("Ensembles Z :",Z)
