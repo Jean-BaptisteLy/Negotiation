@@ -12,8 +12,10 @@ from operator import itemgetter
 
 '''
 TODO :
+set_Z
+tasks + partitions
 non_dominated_po
-concession
+partition aussi je crois
 
 utiliser pandas pour afficher l'historique...?
 
@@ -23,6 +25,8 @@ qui n'a pas de grille
 
 théoriquement, le multilateral généralise tout,
 donc il serait possible de l'utiliser aussi pour le cas de deux agents seulement ?
+
+faire la concession
 
 '''
 
@@ -37,7 +41,7 @@ def manhattanDistance(p1,p2):
 
 def partition(tasks):
     """
-    Calcule toutes les partitions possibles étant donné un ensemble de tâches.
+    Cacule toutes les partitions possibles étant donné un ensemble de tâches.
     """
     l1 = []
     l2 = []
@@ -47,15 +51,6 @@ def partition(tasks):
 
     return list(zip(l1,l2))
 
-def partition_k(tasks, k):
-    """
-    Cacule toutes les partitions possibles étant donné un ensemble de tâches et k agents.
-    """
-    agent_lists = [[] for i in range(k)]
-    for pattern in product([i for i in range(k)],repeat=len(tasks)):
-        for j in range(k):
-            agent_lists[j].append(tuple([x[1] for x in zip(pattern,tasks) if x[0] == j]))
-    return list(zip(*agent_lists))
 
 def non_dominated_po(partitions):
     """
@@ -290,20 +285,18 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             tasks.append(list(objects.keys())[list(objects.values()).index(i)])
         print("tasks :",tasks)
 
-        partitions = partition_k(tasks,len(z_key))
-        print("partitions :",partitions)
-        
-        '''
+        partitions = partition(tasks)
+
         # TO DELETE
         # Tests
         partitions = [((1, 2, 3), (), ()), ((1, 2), (3,), ()), ((1, 3), (2,), ()), ((1,), (2, 3),()), ((2, 3), (1,), ()), ((2,), (1, 3), ()), ((3,), (1, 2), ()), ((), (1, 2, 3), ())]
         partitions += [((1, 2), (), (3,)), ((1, 3), (), (2,)), ((1,), (), (2, 3)), ((2, 3), (), (1,)), ((2,), (), (1, 3)), ((3,), (), (1, 2))]
         partitions += [((), (1, 2), (3,)), ((), (1, 3), (2,)), ((), (1,), (2, 3)), ((), (2, 3), (1,)), ((), (2,), (1, 3)), ((), (3,), (1, 2))]
-        partitions += [((1,), (2,), (3,)), ((1,), (3,), (2,)), ((2,), (1,), (3,)), ((2,), (3,), (1,)), ((3,), (1,), (2,)), ((3,), (2,), (1,))]
+        partitions += [((1,), (2,), (3,))]
         partitions += [((), (), (1, 2, 3))]
-        print("partitions :",partitions)
         # TO DELETE
-        '''
+
+        print("partitions :",partitions)
         
         allocations_pre_traitement = {}
         allocations_a1 = {}
@@ -377,7 +370,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         #id_1, id_2 = z_key[0], z_key[1]
 
         #historic = []
-        #historic.append("round         offer_a" + str(id_1) + "        offer_a" + str(id_2) + "        u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + "   u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
+        #historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
 
         cas = -1
         rounds_bis = 0
@@ -475,7 +468,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             # concession
             if(cas == -1):
                 rounds += 1
-                #historic.append(str(str(rounds)+"      "+str(offer_a1)+"       "+str(offer_a2)+"       "+str((u1a1,u1a2))+"        "+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
+                #historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
 
                 # on prend les agents qui ont la valeur minimale de zeuthen
@@ -550,10 +543,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("nash_products :",nash_products[z_key])
 
         # Mettre à jour le point de conflit pour la prochaine négociation
-        print("z_key :",z_key)
         for i in range(len(z_key)):
-            print("allocations[offers[i]] :",allocations[offers[i]])
-            print("z_key[i]-1 :",z_key[i]-1)
             utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
         '''
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]

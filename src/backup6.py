@@ -299,7 +299,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         partitions = [((1, 2, 3), (), ()), ((1, 2), (3,), ()), ((1, 3), (2,), ()), ((1,), (2, 3),()), ((2, 3), (1,), ()), ((2,), (1, 3), ()), ((3,), (1, 2), ()), ((), (1, 2, 3), ())]
         partitions += [((1, 2), (), (3,)), ((1, 3), (), (2,)), ((1,), (), (2, 3)), ((2, 3), (), (1,)), ((2,), (), (1, 3)), ((3,), (), (1, 2))]
         partitions += [((), (1, 2), (3,)), ((), (1, 3), (2,)), ((), (1,), (2, 3)), ((), (2, 3), (1,)), ((), (2,), (1, 3)), ((), (3,), (1, 2))]
-        partitions += [((1,), (2,), (3,)), ((1,), (3,), (2,)), ((2,), (1,), (3,)), ((2,), (3,), (1,)), ((3,), (1,), (2,)), ((3,), (2,), (1,))]
+        partitions += [((1,), (2,), (3,))]
         partitions += [((), (), (1, 2, 3))]
         print("partitions :",partitions)
         # TO DELETE
@@ -377,7 +377,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         #id_1, id_2 = z_key[0], z_key[1]
 
         #historic = []
-        #historic.append("round         offer_a" + str(id_1) + "        offer_a" + str(id_2) + "        u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + "   u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
+        #historic.append("round 		offer_a" + str(id_1) + " 		offer_a" + str(id_2) + " 		u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + " 	u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
 
         cas = -1
         rounds_bis = 0
@@ -475,7 +475,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             # concession
             if(cas == -1):
                 rounds += 1
-                #historic.append(str(str(rounds)+"      "+str(offer_a1)+"       "+str(offer_a2)+"       "+str((u1a1,u1a2))+"        "+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
+                #historic.append(str(str(rounds)+"		"+str(offer_a1)+"		"+str(offer_a2)+"		"+str((u1a1,u1a2))+"		"+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
                 #print(historic[-1])
 
                 # on prend les agents qui ont la valeur minimale de zeuthen
@@ -550,10 +550,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("nash_products :",nash_products[z_key])
 
         # Mettre à jour le point de conflit pour la prochaine négociation
-        print("z_key :",z_key)
         for i in range(len(z_key)):
-            print("allocations[offers[i]] :",allocations[offers[i]])
-            print("z_key[i]-1 :",z_key[i]-1)
             utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
         '''
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]
