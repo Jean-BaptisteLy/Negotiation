@@ -360,7 +360,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
         # TO DELETE
         # tests...
-        allocations_post_traitement = allocations_pre_traitement
+        #allocations_post_traitement = allocations_pre_traitement
         # TO DELETE
 
         allocations = deepcopy(allocations_post_traitement)
