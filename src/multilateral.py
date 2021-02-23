@@ -15,7 +15,7 @@ TODO :
 set_Z
 tasks + partitions
 non_dominated_po
-agreement et nash_product
+partition aussi je crois
 
 utiliser pandas pour afficher l'historique...?
 
@@ -24,6 +24,9 @@ if not negotiation_failed: ligne 483
 implémenter un autre format qu'une grille ?
 comme ça on peut tester les exemples du cours mais aussi de l'article
 qui n'a pas de grille
+
+théoriquement, le multilateral généralise tout,
+donc il serait possible de l'utiliser aussi pour le cas de deux agents seulement ?
 '''
 
 def manhattanDistance(p1,p2):
@@ -144,11 +147,7 @@ def set_Z(agents_visible_objects):
             Z[(partners[0],partners[1])] = common_elements
     return Z
 
-def agent_utility(greaterValue,tour_value):
-    pass
-
 # tournée entière
-# tournées des deux agents
 def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
     conflict_point = []
     for key in key_Z:
@@ -158,6 +157,8 @@ def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
             conflict_point.append(greaterValue - tour(agents[key],Z[key_Z]))
     return conflict_point
 
+#------------------------------------------------------------------------------------------
+# 3 généralisations de la stratégie de Zeuthen :
 def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
     z = []
     for u in range(len(utilities)):
@@ -173,7 +174,6 @@ def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
             #temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
             z.append(temp)  
     return z
-
 def zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value):
     z = []
     for u in range(len(utilities)):
@@ -182,7 +182,6 @@ def zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value):
             temp = temp * utilities[k][u]
         z.append(temp)
     return z
-
 def zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value):
     z = []
     for u in range(len(utilities)):
@@ -193,6 +192,7 @@ def zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value):
                     temp += utilities[j][u] * utilities[k][u]
         z.append(temp)
     return z
+#------------------------------------------------------------------------------------------
 
 def agreement(offer, allocations):
     """
@@ -491,8 +491,8 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
             #input() # pour regarder chaque round petit à petit
 
-        if not negotiation_failed:
-            #if offer_a1 == offer_a2:
+        if not negotiation_failed and agreement:
+            # TODO
             if u1a2 >= u1a1 or u2a1 >= u2a2:
                 if u1a2 >= u1a1 and u2a1 >= u2a2:
                     print("u1a2 >= u1a1 and u2a1 >= u2a2")
@@ -506,6 +506,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     offer_agreement = offer_a1
                 else:
                     print("impossible... erreur")
+
                 # Agreement :
                 agreements[z_key] = agreement(offer_agreement, allocations)
                 print("agreement :", agreements[z_key])
