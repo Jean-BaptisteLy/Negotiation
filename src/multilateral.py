@@ -212,7 +212,7 @@ def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
         if utilities[u][u] == 0:
             z.append(1)
         else:
-            print("utilities[",u,"][",u,"] =",utilities[u][u])
+            #print("utilities[",u,"][",u,"] =",utilities[u][u])
             # je ne sais pas, c'est pour éviter d'avoir un zéro dans le dénominateur...
             if ( utilities[u][u] - conflict_point_value[u] == 0 ):
                 temp = 1
@@ -319,7 +319,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         print("tasks :",tasks)
 
         partitions = partition_k(tasks,len(z_key))
-        print("partitions :",partitions)
+        #print("partitions :",partitions)
         
         '''
         # TO DELETE
@@ -354,7 +354,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             for t in tours:
                 allocations_pre_traitement[allocation].append(greaterValue - t)
 
-        print("allocations_pre_traitement :",allocations_pre_traitement)
+        #print("allocations_pre_traitement :",allocations_pre_traitement)
         
         allocations_post_traitement = non_dominated_po_k(allocations_pre_traitement,len(z_key))
 
@@ -370,7 +370,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             allocations_a.append(deepcopy(allocations_post_traitement))
             allocations_a_bis.append(deepcopy(allocations_post_traitement))
 
-        print("allocations_a :",allocations_a)
+        #print("allocations_a :",allocations_a)
 
         ''' TO DELETE
         allocations_a1 = deepcopy(allocations_post_traitement)
@@ -452,8 +452,8 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     utilities.append(temp)
                 #print("utilities :",utilities)
 
-            print("offers :",offers)
-            print("utilities :",utilities)
+            #print("offers :",offers)
+            #print("utilities :",utilities)
 
             # Calculs des valeurs de Zeuthen
             #z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
@@ -463,7 +463,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                 zeuthen = zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value)
             elif (zeuthenStrategy == "zeuthen_Sum_of_Products_of_Pairs"): # the best
                 zeuthen = zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value)
-            print("zeuthen :",zeuthen)
+            #print("zeuthen :",zeuthen)
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -504,16 +504,16 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             if(cas == -1):
                 rounds += 1
                 historic.append(str(str(rounds)+"      "+str(offers[0])+"       "+str(offers[1])+"       "+str((utilities[0][0],utilities[0][1]))+"        "+str((utilities[1][0],utilities[1][1]))+"  "+str(zeuthen[0])+"  "+str(zeuthen[1])))
-                print(historic[-1])
+                #print(historic[-1])
 
                 # on prend les agents qui ont la valeur minimale de zeuthen
                 agents_concede = [i for i, x in enumerate(zeuthen) if x == min(zeuthen)]
-                print("agents_concede :",agents_concede)
+                print("Les agents",agents_concede,"concèdent.")
 
                 # ces agents concèdent leur offre
                 for ac in agents_concede:
                     del allocations_a[ac][offers[ac]]
-                print("allocations_a :",allocations_a)
+                #print("allocations_a :",allocations_a)
 
                 # on met à les allocations (car certains ont concédé avant)
                 for i in range(len(allocations_a_bis)):
@@ -578,11 +578,12 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("nash_products :",nash_products[z_key])
 
         # Mettre à jour le point de conflit pour la prochaine négociation
-        print("z_key :",z_key)
+        #print("z_key :",z_key)
         for i in range(len(z_key)):
-            print("allocations[offers[i]] :",allocations[offers[i]])
-            print("z_key[i]-1 :",z_key[i]-1)
-            utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+            #print("allocations[offers[i]] :",allocations[offers[i]])
+            #print("z_key[i]-1 :",z_key[i]-1)
+            #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+            utilities_conflict[z_key[i]] = agreements[z_key][i+1]
         '''
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]
         utilities_conflict[z_key[1]] = allocations[offer_a2][1]
