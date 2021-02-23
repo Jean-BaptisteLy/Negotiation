@@ -356,7 +356,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
         print("allocations_pre_traitement :",allocations_pre_traitement)
         
-        allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
+        allocations_post_traitement = non_dominated_po_k(allocations_pre_traitement,len(z_key))
 
         # TO DELETE
         # tests...
@@ -404,8 +404,8 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         # TO DELETE
         #id_1, id_2 = z_key[0], z_key[1]
 
-        #historic = []
-        #historic.append("round         offer_a" + str(id_1) + "        offer_a" + str(id_2) + "        u" + str(id_1) + "a" + str(id_1) + ",u" + str(id_1) + "a" + str(id_2) + "   u" + str(id_2) + "a" +  str(id_1) + ",u" + str(id_2) + "a" +  str(id_2) + "   z" + str(id_1) + "  z" + str(id_2))
+        historic = []
+        historic.append("round         offer_a" + str(z_key[0]) + "        offer_a" + str(z_key[1]) + "        u" + str(z_key[0]) + "a" + str(z_key[0]) + ",u" + str(z_key[0]) + "a" + str(z_key[1]) + "   u" + str(z_key[1]) + "a" +  str(z_key[0]) + ",u" + str(z_key[1]) + "a" +  str(z_key[1]) + "   z" + str(z_key[0]) + "  z" + str(z_key[1]))
 
         cas = -1
         rounds_bis = 0
@@ -503,8 +503,8 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             # concession
             if(cas == -1):
                 rounds += 1
-                #historic.append(str(str(rounds)+"      "+str(offer_a1)+"       "+str(offer_a2)+"       "+str((u1a1,u1a2))+"        "+str((u2a1,u2a2))+"  "+str(z1)+"  "+str(z2)))
-                #print(historic[-1])
+                historic.append(str(str(rounds)+"      "+str(offers[0])+"       "+str(offers[1])+"       "+str((utilities[0][0],utilities[0][1]))+"        "+str((utilities[1][0],utilities[1][1]))+"  "+str(zeuthen[0])+"  "+str(zeuthen[1])))
+                print(historic[-1])
 
                 # on prend les agents qui ont la valeur minimale de zeuthen
                 agents_concede = [i for i, x in enumerate(zeuthen) if x == min(zeuthen)]
@@ -590,10 +590,10 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
         print("-------------------------------------------------------------------------------------------------------")
         print("Négociation entre les agents",z_key,":")
-        '''
+        
         for h in historic:
             print(h)
-        '''
+        
         print("-------------------------------------------------------------------------------------------------------\n\n")
 
     print("Balanced outcome. End.")

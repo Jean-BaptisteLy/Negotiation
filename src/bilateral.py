@@ -243,8 +243,7 @@ def negotiation(world,d,greaterValue):
 
         print("allocations_pre_traitement :",allocations_pre_traitement)
 
-        #allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
-        allocations_post_traitement = allocations_pre_traitement
+        allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 
         allocations = deepcopy(allocations_post_traitement)
         allocations_a1 = deepcopy(allocations_post_traitement)
