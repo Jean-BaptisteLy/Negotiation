@@ -15,8 +15,15 @@ TODO :
 set_Z
 tasks + partitions
 non_dominated_po
+agreement et nash_product
+
 utiliser pandas pour afficher l'historique...?
+
 if not negotiation_failed: ligne 483
+
+implémenter un autre format qu'une grille ?
+comme ça on peut tester les exemples du cours mais aussi de l'article
+qui n'a pas de grille
 '''
 
 def manhattanDistance(p1,p2):
@@ -189,7 +196,7 @@ def zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value):
 
 def agreement(offer, allocations):
     """
-    Renvoie l'allocation accordée (normalement offer_a1 = offer_a2) et leur utilité.
+    Renvoie l'allocation accordée et leur utilité.
     """
     return [ offer, allocations[offer][0], allocations[offer][1] ]
 
@@ -479,7 +486,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     if agreement:
                         break
 
-            #input()
+            #input() # pour regarder chaque round petit à petit
 
         if not negotiation_failed:
             #if offer_a1 == offer_a2:
