@@ -582,8 +582,8 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         for i in range(len(z_key)):
             #print("allocations[offers[i]] :",allocations[offers[i]])
             #print("z_key[i]-1 :",z_key[i]-1)
-            #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
-            utilities_conflict[z_key[i]] = agreements[z_key][i+1]
+            utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+            #utilities_conflict[z_key[i]] = agreements[z_key][i+1]
             # gros doute :
             # utilities_conflict[z_key[i]] ok dans le bon ordre car clé
             # agreements[z_key][i+1] : je ne sais pas si bon ordre...
