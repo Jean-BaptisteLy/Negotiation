@@ -13,7 +13,7 @@ from operator import itemgetter
 '''
 TODO :
 set_Z
-tasks + partitions
+tasks + partitions [OK normalement]
 non_dominated_po
 partition aussi je crois
 
@@ -51,6 +51,15 @@ def partition(tasks):
 
     return list(zip(l1,l2))
 
+def partition_k(tasks, k):
+    """
+    Cacule toutes les partitions possibles étant donné un ensemble de tâches et k agents.
+    """
+    agent_lists = [[] for i in range(k)]
+    for pattern in product([i for i in range(k)],repeat=len(tasks)):
+        for j in range(k):
+            agent_lists[j].append(tuple([x[1] for x in zip(pattern,tasks) if x[0] == j]))
+    return list(zip(*agent_lists))
 
 def non_dominated_po(partitions):
     """
