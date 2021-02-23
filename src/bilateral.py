@@ -98,7 +98,6 @@ def perception(agents,objects,d):
     # objets perçus par les agents avec la distance
     agents_visible_objects = {}
     for a_key,a_value in agents.items():
-        #print(a_key,a_value)
         visible_objects = []
         for o_key,o_value in objects.items():
             if manhattanDistance(a_value,o_value) <= d:
@@ -229,7 +228,7 @@ def negotiation(world,d,greaterValue):
         #print("tasks :",tasks)
 
         partitions = partition(tasks)
-        print("partitions :",partitions)
+        #print("partitions :",partitions)
         
         allocations_pre_traitement = {}
         allocations_a1 = {}
@@ -241,7 +240,7 @@ def negotiation(world,d,greaterValue):
             tour2 = tour(agents[z_key[1]],objects_agent_2)
             allocations_pre_traitement[allocation] = (greaterValue - tour1 , greaterValue - tour2)
 
-        print("allocations_pre_traitement :",allocations_pre_traitement)
+        #print("allocations_pre_traitement :",allocations_pre_traitement)
 
         allocations_post_traitement = non_dominated_po(allocations_pre_traitement)
 

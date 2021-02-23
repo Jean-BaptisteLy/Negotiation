@@ -209,16 +209,11 @@ def conflict_point(greaterValue,Z,key_Z,agents,utilities_conflict):
 def zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value):
     z = []
     for u in range(len(utilities)):
-        if utilities[u][u] == 0:
+        if utilities[u][u] == conflict_point_value[u]:
             z.append(1)
         else:
             #print("utilities[",u,"][",u,"] =",utilities[u][u])
-            # je ne sais pas, c'est pour éviter d'avoir un zéro dans le dénominateur...
-            if ( utilities[u][u] - conflict_point_value[u] == 0 ):
-                temp = 1
-            else:
-                temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
-            #temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
+            temp = ( utilities[u][u] - min(utilities[u]) ) / ( utilities[u][u] - conflict_point_value[u] )
             z.append(temp)  
     return z
 def zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value):
@@ -440,8 +435,9 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                 # Chaque agent propose l'offre celle qui lui convient le plus
                 offers = []
                 for i in range(len(z_key)):
+                    #print(allocations_a[i])
                     offers.append(max(allocations_a[i], key=lambda k: allocations_a[i][k][i]))
-                #print("offers :",offers)
+                print("offers :",offers)
 
                 # Calculs des utilités selon les offres
                 utilities = []
@@ -580,10 +576,10 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         # Mettre à jour le point de conflit pour la prochaine négociation
         print("z_key :",z_key)
         for i in range(len(z_key)):
-            #print("allocations[offers[i]] :",allocations[offers[i]])
-            #print("z_key[i]-1 :",z_key[i]-1)
-            utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
-            #utilities_conflict[z_key[i]] = agreements[z_key][i+1]
+            print("allocations[offers[i]] :",allocations[offers[i]])
+            print("z_key[i]-1 :",z_key[i]-1)
+            #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+            utilities_conflict[z_key[i]] = agreements[z_key][i+1]
             # gros doute :
             # utilities_conflict[z_key[i]] ok dans le bon ordre car clé
             # agreements[z_key][i+1] : je ne sais pas si bon ordre...
