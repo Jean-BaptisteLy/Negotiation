@@ -198,7 +198,7 @@ def agreement(offer, allocations):
     """
     Renvoie l'allocation accordée et leur utilité.
     """
-    return [offer] + [allocation[offer][i] for i in range(len(allocations))]
+    return [offer] + [allocations[offer][i] for i in range(len(allocations[offer]))]
 
 def nash_product(offer, allocations, conflict_point):
     """
@@ -379,10 +379,10 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         u2a2 = allocations[offer_a2][1]
         '''
 
-        agreement = False
+        agreement_bool = False
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         # Tant que pas d'agreement
-        while (rounds == 0) or (not agreement and not negotiation_failed):
+        while (rounds == 0) or (not agreement_bool and not negotiation_failed):
         # u1a2 >= u1a1 or u2a1 >= u2a2 alors agreement
 
             print("Round",rounds+1,":")
@@ -484,19 +484,25 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                         if utilities[j][i] < utilities[j][j]:
                             break
                         else:
-                            if j == len(z_key)-1:
-                                agreement = True
-                    if agreement:
+                            if j == len(z_key)-1: # on a atteint le dernier agent, donc tous les agents sont contents mdr
+                                agreement_bool = True
+                                best_offer = i
+                    if agreement_bool:
                         break
 
             #input() # pour regarder chaque round petit à petit
 
-        if not negotiation_failed and agreement:
+        if not negotiation_failed and agreement_bool:
             # TODO
+            print(best_offer)
+            print(offers[best_offer])
+            offer_agreement = offers[best_offer]
+
+            '''
             if u1a2 >= u1a1 or u2a1 >= u2a2:
                 if u1a2 >= u1a1 and u2a1 >= u2a2:
                     print("u1a2 >= u1a1 and u2a1 >= u2a2")
-                    print("flip a coin because both agents agree")
+                    print("use random because many agents agree")
                     offer_agreement = random.choice([offer_a1,offer_a2])
                 elif u1a2 >= u1a1:
                     print("u1a2 >= u1a1")
@@ -506,16 +512,15 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     offer_agreement = offer_a1
                 else:
                     print("impossible... erreur")
+            '''
 
-                # Agreement :
-                agreements[z_key] = agreement(offer_agreement, allocations)
-                print("agreement :", agreements[z_key])
+            # Agreement :
+            agreements[z_key] = agreement(offer_agreement, allocations)
+            print("agreement :", agreements[z_key])
 
-                # Nash product :
-                nash_products[z_key] = nash_product(offer_agreement, allocations, conflict_point_value)
-                print("nash_products :",nash_products[z_key])
-            else:
-                print("Error somewhere...")
+            # Nash product :
+            nash_products[z_key] = nash_product(offer_agreement, allocations, conflict_point_value)
+            print("nash_products :",nash_products[z_key])
 
         # Mettre à jour le point de conflit pour la prochaine négociation
         for i in range(len(z_key)):
