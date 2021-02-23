@@ -12,14 +12,8 @@ from operator import itemgetter
 
 '''
 TODO :
-<<<<<<< HEAD
-tasks + partitions
-=======
-set_Z
-tasks + partitions [OK normalement]
->>>>>>> 44263f337e5c171b8e372eeb77a46c51e3e65644
 non_dominated_po
-partition aussi je crois
+concession
 
 utiliser pandas pour afficher l'historique...?
 
@@ -29,8 +23,6 @@ qui n'a pas de grille
 
 théoriquement, le multilateral généralise tout,
 donc il serait possible de l'utiliser aussi pour le cas de deux agents seulement ?
-
-faire la concession
 
 '''
 
@@ -45,7 +37,7 @@ def manhattanDistance(p1,p2):
 
 def partition(tasks):
     """
-    Cacule toutes les partitions possibles étant donné un ensemble de tâches.
+    Calcule toutes les partitions possibles étant donné un ensemble de tâches.
     """
     l1 = []
     l2 = []
@@ -300,6 +292,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
         partitions = partition(tasks)
 
+        '''
         # TO DELETE
         # Tests
         partitions = [((1, 2, 3), (), ()), ((1, 2), (3,), ()), ((1, 3), (2,), ()), ((1,), (2, 3),()), ((2, 3), (1,), ()), ((2,), (1, 3), ()), ((3,), (1, 2), ()), ((), (1, 2, 3), ())]
@@ -308,6 +301,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         partitions += [((1,), (2,), (3,))]
         partitions += [((), (), (1, 2, 3))]
         # TO DELETE
+        '''
 
         print("partitions :",partitions)
         
