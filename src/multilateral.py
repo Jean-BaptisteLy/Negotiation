@@ -205,7 +205,7 @@ def nash_product(offer, allocations, conflict_point):
     Renvoie le produit de Nash d'après l'utlité de l'allocation accordé et le point de conflit.
     """
     nash_product = 1
-    for i in range(len(allocations)):
+    for i in range(len(allocations[offer])):
         nash_product = nash_product * ( allocations[offer][i] - conflict_point[i] )
     return nash_product
 
