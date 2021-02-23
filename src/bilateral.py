@@ -171,7 +171,7 @@ def nash_product(offer, allocations, conflict_point):
     """
     Renvoie le produit de Nash d'après l'utlité de l'allocation accordé et le point de conflit.
     """
-    return (allocations[offer][0] - conflict_point[0] )* ( allocations[offer][1] - conflict_point[1])
+    return (allocations[offer][0] - conflict_point[0] ) * ( allocations[offer][1] - conflict_point[1])
 
 
 # Processus de négociation
