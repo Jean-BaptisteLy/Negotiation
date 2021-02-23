@@ -12,7 +12,6 @@ from operator import itemgetter
 
 '''
 TODO :
-set_Z
 tasks + partitions
 non_dominated_po
 partition aussi je crois
