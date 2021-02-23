@@ -384,8 +384,11 @@ def negotiation(world,d,greaterValue):
                 print("Error somewhere...")
 
         # Mettre à jour le point de conflit pour la prochaine négociation
-        utilities_conflict[z_key[0]] = allocations[offer_a1][0]
-        utilities_conflict[z_key[1]] = allocations[offer_a2][1]
+        utilities_conflict[z_key[0]] = agreements[z_key][1]
+        utilities_conflict[z_key[1]] = agreements[z_key][2]
+
+        #utilities_conflict[z_key[0]] = allocations[offer_a1][0]
+        #utilities_conflict[z_key[1]] = allocations[offer_a2][1]
 
         print("-------------------------------------------------------------------------------------------------------")
         print("Négociation entre les agents",z_key[0],"et",z_key[1],":")
