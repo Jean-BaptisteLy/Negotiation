@@ -19,8 +19,6 @@ partition aussi je crois
 
 utiliser pandas pour afficher l'historique...?
 
-if not negotiation_failed: ligne 483
-
 implémenter un autre format qu'une grille ?
 comme ça on peut tester les exemples du cours mais aussi de l'article
 qui n'a pas de grille
