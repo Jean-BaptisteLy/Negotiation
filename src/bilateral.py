@@ -163,7 +163,7 @@ def zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value):
 
 def agreement(offer, allocations):
     """
-    Renvoie l'allocation accordée (normalement offer_a1 = offer_a2) et leur utilité.
+    Renvoie l'allocation accordée et leur utilité.
     """
     return [ offer, allocations[offer][0], allocations[offer][1] ]
 
