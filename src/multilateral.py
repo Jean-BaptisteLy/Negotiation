@@ -77,6 +77,34 @@ def non_dominated_po(partitions):
         
     return po
 
+def non_dominated_po_k(partitions, k):
+    """
+    k : nombre de sous-ensembles dans une partition, qui est aussi le nombre d'agents.
+    Étant donné un dictionnaire de partitions qui nous permet de connaître la valeur
+    de chaque partition, on fait le traitement des partitions de manière à enlèver celles
+    qui sont Pareto-dominées.
+    """
+    # List of pareto-optimal points
+    po = {}
+    dominated_ids = set()
+    for part, ut in partitions.items():
+        dominated = False
+        # We add the task only if it is not dominated
+        for other_part, other_ut in partitions.items():
+            if part != other_part:
+                for i in range(k):
+                    if dominated:
+                        continue
+                    as_good_as = all([other_ut[j] >= ut[j] if i!=j else True for j in range(k)])
+                    if ((other_ut[i] > ut[i] and as_good_as) or (ut in po.values())):
+                        dominated = True
+                        dominated_ids.add(part)
+                        # print(str(ut) + "dominated by" + str(other_ut))
+                        continue
+        if not dominated:
+            po[part] = ut
+    return po
+
 def tour(depart, objects):
     """
     list , list[lists] -> int
