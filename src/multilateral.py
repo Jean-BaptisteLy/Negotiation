@@ -16,6 +16,7 @@ set_Z
 tasks + partitions
 non_dominated_po
 utiliser pandas pour afficher l'historique...?
+if not negotiation_failed: ligne 483
 '''
 
 def manhattanDistance(p1,p2):
@@ -177,7 +178,13 @@ def zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value):
 
 def zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value):
     z = []
-    
+    for u in range(len(utilities)):
+        temp = 1
+        for j in range(len(utilities)):
+            for k in range(len(utilities)):
+                if j != k:
+                    temp += utilities[j][u] * utilities[k][u]
+        z.append(temp)
     return z
 
 def agreement(offer, allocations):
@@ -194,7 +201,7 @@ def nash_product(offer, allocations, conflict_point):
 
 
 # Processus de négociation
-def negotiation(world,d,greaterValue):
+def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of_Pairs"):
 
     agents = world.get_agents()
     objects = world.get_objects()
@@ -391,7 +398,12 @@ def negotiation(world,d,greaterValue):
 
             # Calculs des valeurs de Zeuthen
             #z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
-            zeuthen = zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value)
+            if (zeuthenStrategy == "zeuthen_Willingness_to_Risk_Conflict"): # the worst
+                zeuthen = zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value)
+            elif (zeuthenStrategy == "zeuthen_A_Product_increasing_Strategy"): # so so la la
+                zeuthen = zeuthen_A_Product_increasing_Strategy(utilities, conflict_point_value)
+            elif (zeuthenStrategy == "zeuthen_Sum_of_Products_of_Pairs"): # the best
+                zeuthen = zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value)
             print("zeuthen :",zeuthen)
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
