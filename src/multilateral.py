@@ -479,7 +479,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
             # vérification de l'agreement
             if not negotiation_failed:
-                best_offers = []     
+                best_agents_offers = []     
                 for i in range(len(z_key)):
                     for j in range(len(z_key)):
                         if utilities[j][i] < utilities[j][j]:
@@ -488,7 +488,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                             if j == len(z_key)-1: # on a atteint le dernier agent, donc tous les agents sont contents mdr
                                 agreement_bool = True
                                 #best_offer = i
-                                best_offers.append(i)
+                                best_agents_offers.append(i)
                     #if agreement_bool:
                         #break
 
@@ -500,9 +500,9 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             #offer_agreement = offers[best_offer] # par défaut
 
             # mais on peut faire un flip si plusieurs agents sont agree
-            print("on fait un flip dice sur ces offres :")
-            print("best_offers :",best_offers)
-            offer_agreement = offers[random.choice(best_offers)]
+            print("on fait un flip dice sur ces agents qui possèdent les meilleures offres :")
+            print("best_agents_ offers :",best_agents_offers)
+            offer_agreement = offers[random.choice(best_agents_offers)]
 
 
 
