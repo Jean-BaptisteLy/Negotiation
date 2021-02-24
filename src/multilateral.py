@@ -252,6 +252,33 @@ def nash_product(offer, allocations, conflict_point):
         nash_product = nash_product * ( allocations[offer][i] - conflict_point[i] )
     return nash_product
 
+def display_dataframe(z_key,rounds,historic_offers,historic_utilities,historic_zeuthen):
+    initial_data = {"Round" : []}
+    for i in range(rounds):
+        initial_data["Round"].append(i+1)
+    df = pd.DataFrame(initial_data, columns = ["Round"])
+    nb_agents = len(z_key)
+    for i in range(nb_agents):
+        #column = "offer_a" + str(z_key[i])
+        #df["offer_a" + str(z_key[i])] = historic_offers[i]
+        df["offer_a" + str(z_key[i])] = [index[i] for index in historic_offers]
+        #df["z" + str(z_key[i])] = historic_zeuthen[i]
+        
+        #for j in range(nb_agents):
+            #df["u" + str(z_key[i]) + ",a" + str(z_key[j])] = historic_utilities[i][j]
+    for i in range(nb_agents):
+        titre = str()
+        for j in range(nb_agents):
+            titre += "u" + str(z_key[i]) + "a" + str(z_key[j])
+            if j != nb_agents-1:
+                titre += ","
+        print(titre)
+        df[titre] = [tuple(index[i]) for index in historic_utilities]
+
+    for i in range(nb_agents):
+        df["z" + str(z_key[i])] = [index[i] for index in historic_zeuthen]
+    print(df)
+    return df
 
 # Processus de négociation
 def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of_Pairs"):
@@ -425,6 +452,20 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         u2a2 = allocations[offer_a2][1]
         '''
 
+        # Historique pour dataframe
+        historic_offers = []
+        historic_utilities = []
+        historic_zeuthen = []
+        '''
+        for i in range(len(z_key)):
+            #historic_offers.append([])
+            #historic_utilities.append([])
+            #historic_zeuthen.append([])
+            for j in range(len(z_key)):
+                #historic_utilities[i].append[]
+        '''
+
+
         agreement_bool = False
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         # Tant que pas d'agreement
@@ -451,7 +492,9 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                 #print("utilities :",utilities)
 
             print("offers :",offers)
-            #print("utilities :",utilities)
+            historic_offers.append(offers)
+            historic_utilities.append(utilities)
+            print("utilities :",utilities)
 
             # Calculs des valeurs de Zeuthen
             #z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
@@ -462,6 +505,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             elif (zeuthenStrategy == "zeuthen_Sum_of_Products_of_Pairs"): # the best
                 zeuthen = zeuthen_Sum_of_Products_of_Pairs(utilities, conflict_point_value)
             #print("zeuthen :",zeuthen)
+            historic_zeuthen.append(zeuthen)
 
             # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
@@ -597,8 +641,12 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         print("-------------------------------------------------------------------------------------------------------")
         print("Négociation entre les agents",z_key,":")
         
+        display_dataframe(z_key,rounds,historic_offers,historic_utilities,historic_zeuthen)
+
         for h in historic:
             print(h)
+
+
         
         print("-------------------------------------------------------------------------------------------------------\n\n")
 
