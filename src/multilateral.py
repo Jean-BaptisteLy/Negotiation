@@ -573,16 +573,17 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             nash_products[z_key] = nash_product(offer_agreement, allocations, conflict_point_value)
             print("nash_products :",nash_products[z_key])
 
-        # Mettre à jour le point de conflit pour la prochaine négociation
-        print("z_key :",z_key)
-        for i in range(len(z_key)):
-            print("allocations[offers[i]] :",allocations[offers[i]])
-            print("z_key[i]-1 :",z_key[i]-1)
-            #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
-            utilities_conflict[z_key[i]] = agreements[z_key][i+1]
-            # gros doute :
-            # utilities_conflict[z_key[i]] ok dans le bon ordre car clé
-            # agreements[z_key][i+1] : je ne sais pas si bon ordre...
+            # Mettre à jour le point de conflit pour la prochaine négociation
+            print("z_key :",z_key)
+            for i in range(len(z_key)):
+                print("allocations[offers[i]] :",allocations[offers[i]])
+                print("z_key[i]-1 :",z_key[i]-1)
+                #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+                print(agreements[z_key])
+                utilities_conflict[z_key[i]] = agreements[z_key][i+1]
+                # gros doute :
+                # utilities_conflict[z_key[i]] ok dans le bon ordre car clé
+                # agreements[z_key][i+1] : je ne sais pas si bon ordre...
         '''
         utilities_conflict[z_key[0]] = allocations[offer_a1][0]
         utilities_conflict[z_key[1]] = allocations[offer_a2][1]
