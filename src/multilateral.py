@@ -9,6 +9,7 @@ from sys import maxsize
 from itertools import permutations, product
 from itertools import combinations
 from operator import itemgetter
+import pandas as pd
 
 '''
 TODO :
@@ -388,6 +389,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         # Chaque agent propose l'offre celle qui lui convient le plus
         offers = []
         for i in range(len(z_key)):
+            print("IOIEZUGIOEZGOIEZGIOEZGIEGO3 :",allocations_a[i])
             offers.append(max(allocations_a[i], key=lambda k: allocations_a[i][k][i]))
         #print("offers :",offers)
 
@@ -437,7 +439,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                 for i in range(len(z_key)):
                     #print(allocations_a[i])
                     offers.append(max(allocations_a[i], key=lambda k: allocations_a[i][k][i]))
-                print("offers :",offers)
+                #print("offers :",offers)
 
                 # Calculs des utilités selon les offres
                 utilities = []
@@ -448,7 +450,7 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     utilities.append(temp)
                 #print("utilities :",utilities)
 
-            #print("offers :",offers)
+            print("offers :",offers)
             #print("utilities :",utilities)
 
             # Calculs des valeurs de Zeuthen
@@ -508,10 +510,13 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
                 # ces agents concèdent leur offre
                 for ac in agents_concede:
+                    print("avant : allocations_a[",ac,"] :",allocations_a[ac])
+                    print("allocations_a[",ac,"][offers[",ac,"] :",allocations_a[ac][offers[ac]])
                     del allocations_a[ac][offers[ac]]
+                    print("après : allocations_a[",ac,"] :",allocations_a[ac])
                 #print("allocations_a :",allocations_a)
 
-                # on met à les allocations (car certains ont concédé avant)
+                # on met à jour les allocations (car certains ont concédé avant)
                 for i in range(len(allocations_a_bis)):
                     allocations_a_bis[i] = deepcopy(allocations_a[i])
 
