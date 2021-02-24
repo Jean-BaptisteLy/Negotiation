@@ -301,11 +301,6 @@ def negotiation(world,d,greaterValue):
             # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
             # tel qu'au prochain tour zj <= zi
 
-            # inférieur/supérieur ou égal pour les z ?????
-            # traiter cas particulier si on """concède""" tout ? cad si on supprime tous les éléments du dico => PROBLEME à gérer #TODO
-            # Je crois que si on concède tout, alors la négotiation échoue et donc on obtient ce qu'on aurait au point de conflit(?)
-            # Ah peut-être... ! Faudrait demander à Maudet !
-
             if cas == 1: # Le premier agent a concédé précédemment
                 if z1 >= z2:
                     cas = 0
