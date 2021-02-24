@@ -11,22 +11,6 @@ from itertools import combinations
 from operator import itemgetter
 import pandas as pd
 
-'''
-TODO :
-non_dominated_po
-concession
-
-utiliser pandas pour afficher l'historique...?
-
-implémenter un autre format qu'une grille ?
-comme ça on peut tester les exemples du cours mais aussi de l'article
-qui n'a pas de grille
-
-théoriquement, le multilateral généralise tout,
-donc il serait possible de l'utiliser aussi pour le cas de deux agents seulement ?
-
-'''
-
 def manhattanDistance(p1,p2):
     """
     Renvoie la distance de Manhattan entre les points p1 et p2
