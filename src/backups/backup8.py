@@ -259,14 +259,22 @@ def display_dataframe(z_key,rounds,historic_offers,historic_utilities,historic_z
     df = pd.DataFrame(initial_data, columns = ["Round"])
     nb_agents = len(z_key)
     for i in range(nb_agents):
+        #column = "offer_a" + str(z_key[i])
+        #df["offer_a" + str(z_key[i])] = historic_offers[i]
         df["offer_a" + str(z_key[i])] = [index[i] for index in historic_offers]
+        #df["z" + str(z_key[i])] = historic_zeuthen[i]
+        
+        #for j in range(nb_agents):
+            #df["u" + str(z_key[i]) + ",a" + str(z_key[j])] = historic_utilities[i][j]
     for i in range(nb_agents):
         titre = str()
         for j in range(nb_agents):
             titre += "u" + str(z_key[i]) + "a" + str(z_key[j])
             if j != nb_agents-1:
                 titre += ","
+        print(titre)
         df[titre] = [tuple(index[i]) for index in historic_utilities]
+
     for i in range(nb_agents):
         df["z" + str(z_key[i])] = [index[i] for index in historic_zeuthen]
     print(df)
@@ -292,6 +300,12 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
     # ensemble Z (objets en commun)
     Z = set_Z(agents_visible_objects)
+
+    # TO DELETE
+    # Tests :
+    #Z = {(1, 2, 3): [(6, 4), (8, 3), (6, 8), (5, 6), (3, 6), (9, 5)]}
+    #Z = {(1, 2, 3): [(8,5),(8,7),(10,6)]}
+    # TO DELETE
 
     print("Ensembles Z :",Z)
 
@@ -325,10 +339,22 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         tasks = []
         for i in z_value:
             tasks.append(list(objects.keys())[list(objects.values()).index(i)])
-        #print("tasks :",tasks)
+        print("tasks :",tasks)
 
         partitions = partition_k(tasks,len(z_key))
         #print("partitions :",partitions)
+        
+        '''
+        # TO DELETE
+        # Tests
+        partitions = [((1, 2, 3), (), ()), ((1, 2), (3,), ()), ((1, 3), (2,), ()), ((1,), (2, 3),()), ((2, 3), (1,), ()), ((2,), (1, 3), ()), ((3,), (1, 2), ()), ((), (1, 2, 3), ())]
+        partitions += [((1, 2), (), (3,)), ((1, 3), (), (2,)), ((1,), (), (2, 3)), ((2, 3), (), (1,)), ((2,), (), (1, 3)), ((3,), (), (1, 2))]
+        partitions += [((), (1, 2), (3,)), ((), (1, 3), (2,)), ((), (1,), (2, 3)), ((), (2, 3), (1,)), ((), (2,), (1, 3)), ((), (3,), (1, 2))]
+        partitions += [((1,), (2,), (3,)), ((1,), (3,), (2,)), ((2,), (1,), (3,)), ((2,), (3,), (1,)), ((3,), (1,), (2,)), ((3,), (2,), (1,))]
+        partitions += [((), (), (1, 2, 3))]
+        print("partitions :",partitions)
+        # TO DELETE
+        '''
         
         allocations_pre_traitement = {}
         allocations_a1 = {}
@@ -355,6 +381,11 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
         
         allocations_post_traitement = non_dominated_po_k(allocations_pre_traitement,len(z_key))
 
+        # TO DELETE
+        # tests...
+        #allocations_post_traitement = allocations_pre_traitement
+        # TO DELETE
+
         allocations = deepcopy(allocations_post_traitement)
         allocations_a = []
         allocations_a_bis = []
@@ -364,14 +395,41 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
         #print("allocations_a :",allocations_a)
 
+        ''' TO DELETE
+        allocations_a1 = deepcopy(allocations_post_traitement)
+        allocations_a2 = deepcopy(allocations_post_traitement)
+
+        allocations_a1_bis = deepcopy(allocations_post_traitement)
+        allocations_a2_bis = deepcopy(allocations_post_traitement)
+        '''
+
         print("Allocation avec bargaining :")
         print(allocations_a[0])
+
+        ''' TO DELETE ???
+        if(allocations_a1 == allocations_a2):
+            print(allocations_a1)
+        else:
+            print("problem somewhere...")
+        '''
 
         # Chaque agent propose l'offre celle qui lui convient le plus
         offers = []
         for i in range(len(z_key)):
+            print("IOIEZUGIOEZGOIEZGIOEZGIEGO3 :",allocations_a[i])
             offers.append(max(allocations_a[i], key=lambda k: allocations_a[i][k][i]))
         #print("offers :",offers)
+
+        ''' TO DELETE
+        offer_a1 = max(allocations_a1, key=lambda k: allocations_a1[k][0])
+        offer_a2 = max(allocations_a2, key=lambda k: allocations_a2[k][1])
+        '''
+
+        # TO DELETE
+        #id_1, id_2 = z_key[0], z_key[1]
+
+        historic = []
+        historic.append("round         offer_a" + str(z_key[0]) + "        offer_a" + str(z_key[1]) + "        u" + str(z_key[0]) + "a" + str(z_key[0]) + ",u" + str(z_key[0]) + "a" + str(z_key[1]) + "   u" + str(z_key[1]) + "a" +  str(z_key[0]) + ",u" + str(z_key[1]) + "a" +  str(z_key[1]) + "   z" + str(z_key[0]) + "  z" + str(z_key[1]))
 
         cas = -1
         rounds_bis = 0
@@ -386,15 +444,33 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             utilities.append(temp)
         #print("utilities :",utilities)
 
+        ''' TO DELETE
+        # Calcul des utilités selon les offres
+        u1a1 = allocations[offer_a1][0]
+        u1a2 = allocations[offer_a2][0]
+        u2a1 = allocations[offer_a1][1]
+        u2a2 = allocations[offer_a2][1]
+        '''
+
         # Historique pour dataframe
         historic_offers = []
         historic_utilities = []
         historic_zeuthen = []
+        '''
+        for i in range(len(z_key)):
+            #historic_offers.append([])
+            #historic_utilities.append([])
+            #historic_zeuthen.append([])
+            for j in range(len(z_key)):
+                #historic_utilities[i].append[]
+        '''
+
 
         agreement_bool = False
         # Tant que les agents ne sont pas arrivés à un accord ou que la négotiation n'a pas echoué
         # Tant que pas d'agreement
         while (rounds == 0) or (not agreement_bool and not negotiation_failed):
+        # u1a2 >= u1a1 or u2a1 >= u2a2 alors agreement
 
             print("Round",rounds+1,":")
 
@@ -415,12 +491,13 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
                     utilities.append(temp)
                 #print("utilities :",utilities)
 
-            #print("offers :",offers)
+            print("offers :",offers)
             historic_offers.append(offers)
             historic_utilities.append(utilities)
-            #print("utilities :",utilities)
+            print("utilities :",utilities)
 
             # Calculs des valeurs de Zeuthen
+            #z1, z2 = zeuthens(u1a1, u1a2, u2a1, u2a2, conflict_point_value)
             if (zeuthenStrategy == "zeuthen_Willingness_to_Risk_Conflict"): # the worst
                 zeuthen = zeuthen_Willingness_to_Risk_Conflict(utilities, conflict_point_value)
             elif (zeuthenStrategy == "zeuthen_A_Product_increasing_Strategy"): # so so la la
@@ -430,9 +507,46 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             #print("zeuthen :",zeuthen)
             historic_zeuthen.append(zeuthen)
 
+            # l'agent avec le z le plus petit concède, si z1 == z2 alors les deux concedent,
+            # puis soit i l'agent qui concède et j l'autre, l'agent i fait de sorte à faire un offre 
+            # tel qu'au prochain tour zj <= zi
+
+            # inférieur/supérieur ou égal pour les z ?????
+            # traiter cas particulier si on """concède""" tout ? cad si on supprime tous les éléments du dico => PROBLEME à gérer #TODO
+            # Je crois que si on concède tout, alors la négotiation échoue et donc on obtient ce qu'on aurait au point de conflit(?)
+            # Ah peut-être... ! Faudrait demander à Maudet !
+
+            '''
+            if cas == 1: # Le premier agent a concédé précédemment
+                if z1 >= z2:
+                    cas = 0
+                    allocations_a1 = deepcopy(allocations_a1_bis)
+                else:  # z1 < z2
+                    del allocations_a1[offer_a1]
+                    print("Agent",z_key[0],": Mauvaise concession ! Je ne concède pas",offer_a1,"!")
+            elif cas == 2: # Le second agent a concédé précédemment
+                if z1 <= z2:
+                    cas = 0
+                    allocations_a2 = deepcopy(allocations_a2_bis)
+                else:
+                    del allocations_a2[offer_a2]
+                    print("Agent",z_key[1],": Mauvaise concession ! Je ne concède pas",offer_a2,"!")
+
+            elif cas == 3: # Les deux agents ont concédé précédemment
+                pass
+            elif cas == 0:
+                cas = 0 # LOL c'est un bouche-trou
+            else:
+                print("########## !!! Erreur !!! ##########")
+                print("cas :",cas)
+                input()
+            '''
+
             # concession
             if(cas == -1):
                 rounds += 1
+                historic.append(str(str(rounds)+"      "+str(offers[0])+"       "+str(offers[1])+"       "+str((utilities[0][0],utilities[0][1]))+"        "+str((utilities[1][0],utilities[1][1]))+"  "+str(zeuthen[0])+"  "+str(zeuthen[1])))
+                #print(historic[-1])
 
                 # on prend les agents qui ont la valeur minimale de zeuthen
                 agents_concede = [i for i, x in enumerate(zeuthen) if x == min(zeuthen)]
@@ -440,10 +554,10 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
 
                 # ces agents concèdent leur offre
                 for ac in agents_concede:
-                    #print("avant : allocations_a[",ac,"] :",allocations_a[ac])
-                    #print("allocations_a[",ac,"][offers[",ac,"] :",allocations_a[ac][offers[ac]])
+                    print("avant : allocations_a[",ac,"] :",allocations_a[ac])
+                    print("allocations_a[",ac,"][offers[",ac,"] :",allocations_a[ac][offers[ac]])
                     del allocations_a[ac][offers[ac]]
-                    #print("après : allocations_a[",ac,"] :",allocations_a[ac])
+                    print("après : allocations_a[",ac,"] :",allocations_a[ac])
                 #print("allocations_a :",allocations_a)
 
                 # on met à jour les allocations (car certains ont concédé avant)
@@ -484,6 +598,22 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("best_agents_ offers :",best_agents_offers)
             offer_agreement = offers[random.choice(best_agents_offers)]
 
+            '''
+            if u1a2 >= u1a1 or u2a1 >= u2a2:
+                if u1a2 >= u1a1 and u2a1 >= u2a2:
+                    print("u1a2 >= u1a1 and u2a1 >= u2a2")
+                    print("use random because many agents agree")
+                    offer_agreement = random.choice([offer_a1,offer_a2])
+                elif u1a2 >= u1a1:
+                    print("u1a2 >= u1a1")
+                    offer_agreement = offer_a2
+                elif u2a1 >= u2a2:
+                    print("u2a1 >= u2a2")
+                    offer_agreement = offer_a1
+                else:
+                    print("impossible... erreur")
+            '''
+
             # Agreement :
             agreements[z_key] = agreement(offer_agreement, allocations)
             print("agreement :", agreements[z_key])
@@ -493,19 +623,31 @@ def negotiation(world,d,greaterValue,zeuthenStrategy="zeuthen_Sum_of_Products_of
             print("nash_products :",nash_products[z_key])
 
             # Mettre à jour le point de conflit pour la prochaine négociation
-            #print("z_key :",z_key)
+            print("z_key :",z_key)
             for i in range(len(z_key)):
+                print("allocations[offers[i]] :",allocations[offers[i]])
+                print("z_key[i]-1 :",z_key[i]-1)
                 #utilities_conflict[z_key[i]] = allocations[offers[i]][z_key[i]-1]
+                print(agreements[z_key])
                 utilities_conflict[z_key[i]] = agreements[z_key][i+1]
                 # gros doute :
                 # utilities_conflict[z_key[i]] ok dans le bon ordre car clé
                 # agreements[z_key][i+1] : je ne sais pas si bon ordre...
+        '''
+        utilities_conflict[z_key[0]] = allocations[offer_a1][0]
+        utilities_conflict[z_key[1]] = allocations[offer_a2][1]
+        '''
 
         print("-------------------------------------------------------------------------------------------------------")
         print("Négociation entre les agents",z_key,":")
         
         display_dataframe(z_key,rounds,historic_offers,historic_utilities,historic_zeuthen)
-       
+
+        for h in historic:
+            print(h)
+
+
+        
         print("-------------------------------------------------------------------------------------------------------\n\n")
 
     print("Balanced outcome. End.")
